@@ -2,14 +2,13 @@ package itsamysterious.mods.reallifemod;
 
 import java.io.File;
 
-import com.sun.javafx.logging.Logger;
-
 import itsamysterious.mods.reallifemod.common.CommonProxy;
 import itsamysterious.mods.reallifemod.common.ServerTickHandler;
 import itsamysterious.mods.reallifemod.config.RealLifeModConfig;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Blocks;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Items;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityDigitalFrame;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityRamp;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityTarmac;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Computer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Drawer;
@@ -26,7 +25,6 @@ import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
 import itsamysterious.mods.reallifemod.core.handlers.ClientHandler;
 import itsamysterious.mods.reallifemod.core.handlers.CommonHandler;
 import itsamysterious.mods.reallifemod.core.handlers.GuiHandler;
-import itsamysterious.mods.reallifemod.core.handlers.Keybindings;
 import itsamysterious.mods.reallifemod.core.handlers.WorldGenCopper;
 import itsamysterious.mods.reallifemod.core.packets.CustomCollisionHandler;
 import itsamysterious.mods.reallifemod.core.packets.CustomCollisionPacket;
@@ -39,7 +37,6 @@ import itsamysterious.mods.reallifemod.core.packets.SetPositionHandler;
 import itsamysterious.mods.reallifemod.core.packets.SetPropertiesPackage;
 import itsamysterious.mods.reallifemod.core.packets.UpdateVehiclePacket;
 import itsamysterious.mods.reallifemod.core.roads.signs.Signs;
-import itsamysterious.mods.reallifemod.core.tiles.RLMTileEntity;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasPump;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasTank;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
@@ -47,13 +44,13 @@ import itsamysterious.mods.reallifemod.core.vehicles.VehicleFile;
 import itsamysterious.mods.reallifemod.core.vehicles.Vehicles;
 import itsamysterious.mods.reallifemod.init.Reference;
 import itsamysterious.mods.reallifemod.utils.CustomCreativeTab;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -235,10 +232,11 @@ public class RealLifeMod {
 		setupTile(TileEntity_PowerLine.class);
 		setupTile(TileEntity_Transformer.class);
 		setupTile(TileEntity_Pinwheel.class);
-		GameRegistry.registerTileEntity(TileEntityTarmac.class, TileEntityTarmac.class.getName());
+		setupTile(TileEntityRamp.class);
+		setupTile(TileEntityTarmac.class);
 	}
 
-	public void setupTile(Class<? extends RLMTileEntity> class1) {
+	public void setupTile(Class<? extends TileEntity> class1) {
 		GameRegistry.registerTileEntity(class1, class1.getName());
 	}
 

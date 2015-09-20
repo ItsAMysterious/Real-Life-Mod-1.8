@@ -9,6 +9,7 @@ import itsamysterious.mods.reallifemod.core.blocks.BlockDrawer;
 import itsamysterious.mods.reallifemod.core.blocks.BlockGasTank;
 import itsamysterious.mods.reallifemod.core.blocks.BlockParquet;
 import itsamysterious.mods.reallifemod.core.blocks.BlockPetrolPump;
+import itsamysterious.mods.reallifemod.core.blocks.BlockRamp;
 import itsamysterious.mods.reallifemod.core.blocks.BlockTarmac;
 import itsamysterious.mods.reallifemod.core.blocks.BlockTelevision;
 import itsamysterious.mods.reallifemod.core.blocks.BlockVendingMachine;
@@ -37,7 +38,7 @@ public class RealLifeMod_Blocks {
 
 	// Blockvariables
 	public static Block block_TV, block_Drawer, block_Computer, parquet, toilet, washbasin, petrolPump, tarmac, gastank, lantern,
-	vendingMachine, drinksFridge, powerLine, transformer, cable, pinwheel, copperore, pictureframe;
+	vendingMachine, drinksFridge, powerLine, transformer, cable, pinwheel, copperore, pictureframe, ramp;
 
 	public static void defineBlocks() {
 		blockList.add(block_TV = new BlockTelevision());
@@ -57,7 +58,8 @@ public class RealLifeMod_Blocks {
 		blockList.add(pinwheel = new BlockPinwheel());
 		blockList.add(copperore=new CopperOre().setCreativeTab(RealLifeMod.Technologie));
 		blockList.add(pictureframe=new BlockDigitalFrame(Material.circuits));
-		
+		blockList.add(ramp=new BlockRamp());
+
 		blocks3d.add(lantern  = new BlockLantern().setCreativeTab(RealLifeMod.Cars));
 		
 	}

@@ -67,6 +67,7 @@ public class BlockLantern extends RLMBlockContainer {
 	protected BlockState createBlockState() {
 		return new ExtendedBlockState(this, new IProperty[]{}, new IUnlistedProperty[]{B3DLoader.B3DFrameProperty.instance});
 	}
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {

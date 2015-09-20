@@ -12,6 +12,7 @@ import itsamysterious.mods.reallifemod.common.CommonProxy;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Blocks;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Items;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityDigitalFrame;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityRamp;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Computer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Drawer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DrinksFridge;
@@ -34,6 +35,7 @@ import itsamysterious.mods.reallifemod.core.rendering.items.GenericBlockItemRend
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.RenderLantern;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.RenderPictureFrame;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.RenderPinwheel;
+import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.RenderRamp;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.RenderTransformer;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.Render_DrinksFridge;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.Render_GasTank;
@@ -114,7 +116,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_PowerLine.class, new Render_PowerLine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Transformer.class, new RenderTransformer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Pinwheel.class, new RenderPinwheel());
-		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRamp.class, new RenderRamp());
+
 		RenderingRegistry.registerEntityRenderingHandler(EntityVehicle.class, new RenderVehicle());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPylon.class, new RenderPylon());
 		MinecraftForge.EVENT_BUS.register(new RLMOverlay(Minecraft.getMinecraft()));
@@ -129,9 +132,9 @@ public class ClientProxy extends CommonProxy {
 
 		List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class,
 				Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
-
 		defaultResourcePacks.add(new FolderResourcePack(new File(Minecraft.getMinecraft().mcDataDir,"/RLM")));
 		File screenshots = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
+		if(screenshots.listFiles().length>0)
 		for (File f : screenshots.listFiles()) {
 			Screenshotspack.filenames.add(f.getName());
 		}
