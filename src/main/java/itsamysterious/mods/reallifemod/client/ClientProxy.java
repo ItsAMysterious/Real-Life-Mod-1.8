@@ -134,7 +134,9 @@ public class ClientProxy extends CommonProxy {
 				Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
 		defaultResourcePacks.add(new FolderResourcePack(new File(Minecraft.getMinecraft().mcDataDir,"/RLM")));
 		File screenshots = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
-		if(screenshots.listFiles().length>0)
+		if(!screenshots.exists()){
+			screenshots.mkdirs();
+		}
 		for (File f : screenshots.listFiles()) {
 			Screenshotspack.filenames.add(f.getName());
 		}
