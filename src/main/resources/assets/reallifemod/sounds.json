@@ -1,0 +1,7 @@
+{
+"lambo_runs": {"category": "ambient","sounds": [{"name": "lambo_run","stream": true}]},
+"lambo_starts": {"category": "ambient","sounds": [{"name": "lambo_start","stream": true}]},
+"lambo_stops": {"category": "ambient","sounds": [{"name": "lambo_start","stream": true}]},
+"lambo_throttles": {"category": "ambient","sounds": [{"name": "lambo_throttle","stream": true}]}
+
+}

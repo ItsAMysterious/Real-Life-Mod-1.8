@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "reallifemod:RLMTelevision" },
+        "facing=south": { "model": "reallifemod:RLMTelevision", "y": 180 },
+        "facing=west":  { "model": "reallifemod:RLMTelevision", "y": 270 },
+        "facing=east":  { "model": "reallifemod:RLMTelevision", "y": 90 }
+    }
+}

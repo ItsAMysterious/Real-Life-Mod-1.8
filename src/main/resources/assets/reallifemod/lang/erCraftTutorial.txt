@@ -1,0 +1,2 @@
+ Zunächst müssen wir natürlich ein Programm anlegen und da das ersten
+Programm eines Programmierers egal in welcher Sprache Hallo Welt heißt nennen wir es Hallo Welt- ("Edit HalloWelt") - 

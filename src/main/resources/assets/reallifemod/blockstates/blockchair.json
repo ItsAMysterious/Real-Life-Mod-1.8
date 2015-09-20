@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "reallifemod:blockchair" },
+        "facing=south": { "model": "reallifemod:blockchair", "y": 180 },
+        "facing=west":  { "model": "reallifemod:blockchair", "y": 270 },
+        "facing=east":  { "model": "reallifemod:blockchair", "y": 90 }
+    }
+}

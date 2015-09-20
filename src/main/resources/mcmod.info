@@ -1,0 +1,16 @@
+[
+{
+  "modid": "reallifemod",
+  "name": "Real Life Mod",
+  "description": "This mod makes minecraft more like the real life. It adds a money and bank system to sell and buy blocks and items, a better minecraft survival including temperature, thirst, going to the toilet etc. Just the things we are doing all day long. It also adds tons off blocks, items and entitys, including realistic cars, furniture, tv's and many other things that improve the real life feeling in minecraft. Currently this mod is in a very WIP-state because of that some things are a little bit buggy.",
+  "version": "0.35",
+ "mcversion":"${mcversion}",
+  "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/minecraftmods/2196915",
+  "updateUrl": "",
+  "authorList": ["\u00A7aItsAMysterious" , "Trident_Killer"],
+  "credits": "Lead Programmer: ItsAMysterious\nGrahics: Trident_Killer,jalu1,LRA_10,§2Minsa20,Raul9150",
+  "logoFile": "Logo.png",
+  "screenshots": [],
+  "dependencies": []
+  }
+  ]

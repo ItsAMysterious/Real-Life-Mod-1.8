@@ -1,0 +1,20 @@
+Hey Leute und willkommen zu einer neuen Modvorstellung mit mir ItsAMysterious und heute 
+zeige ich euch eine 1.7.10 Mod die aber so vielseitig ist, dass es davon mehrere Folgen geben wird also
+-nicht wundern wenn ich am ende noch nicht alles was aufgebaut ist gezeigt habe das gibt es dann spätestens in einer woche in Folge nummer zwei.
+Lange rede kurzer Sinn-es geht um die ComputeCraft mod. Eine Mod die funktionierend programmierbare Computer, Roboter und noch einige weitere
+colle Sachen zum Spiel hinzuzfügt. Bevor wir uns jetzt in die Laborklamotten schmeißen und uns das schöne ding ansehen, nutzt den Moment in dem ihr
+noch unsterile sachen anfassendürft und drückt auf den Likebutton wenn euch dieses Video gefällt und für mehr Minecraft modvorstellungen wärs cool
+wenn ihr auch ein Abo dalasst. Und jetzt - rein ins vergnügen!
+
+Wir legen los mit einem Computer, hier so sieht er aus. Der Computer ist das sozusagen das Herzstück des ganzen. Von hier aus kamn
+man alles kontrollieren und steuern.
+Es gibt drei grundlegende Befehle die den Computer ansteuern können. Das ist zuersteinmal STRG_T zum Programm beenden,
+STRG-R zum Neustarten und STRG-S zum Herunterfahren. Mit help kann man nun auf die verschiedenen programme zugreifen.
+Das sind die allerwichtigsten Befehle - ComputerCraft liefert uns aber die möglichkeit Programme zu schreiben und zu verwenden.
+Und das geschieht in der LUA Programmiersprache. Da das den Rahmen sprengen würde wenn ich euch erkläre wie das funktioniert,
+werde ich eine ComputerCraft Tutorial reihe starten und in der Beschreibung verlinken. Ich habe bereits ein kleines Programm verfasst
+und zwar einen Taschenrechner.
+Es geht los mit den sogenannten Turtles - also Schildkröten. Jede Turtle hat eine eigene Spezielle fähigkeit die sie automatisiert ausüben kann.
+Man kann sie mithilfe der 'lua' programmiersprache steuern und überwachen. 
+Wir beginnen mit der ersten Turtle - ihre Aufgabe ist es Dinge aufzubauen. Das Craftingrezept ist relativ einfach, eine Truhe, einen Computer
+und eisenbarren.
