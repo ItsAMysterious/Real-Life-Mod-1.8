@@ -5,6 +5,7 @@ import java.util.List;
 import itsamysterious.mods.reallifemod.RealLifeMod;
 import itsamysterious.mods.reallifemod.core.gui.GuiModInit;
 import itsamysterious.mods.reallifemod.core.gui.lifesystem.GuiCharacterMenu;
+import itsamysterious.mods.reallifemod.core.gui.phone.GuiPhone;
 import itsamysterious.mods.reallifemod.core.lifesystem.RLMPlayerProps;
 import itsamysterious.mods.reallifemod.core.packets.MountVehicleMessage;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
@@ -82,19 +83,24 @@ public class CommonHandler {
 		RLMPlayerProps.get(event.entityPlayer).copy(RLMPlayerProps.get(event.original));
 	}
 
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void onKeyPressed(ClientTickEvent e) {
-		if (e.side == Side.CLIENT&&e.phase==e.phase.END) {
-			if (Keybindings.EnterVehicleKey.isKeyDown()) {
+		if (e.phase==e.phase.END) {
+			if (Keybindings.CharacterKey.isKeyDown()) {
+				System.out.println("Testen");
+			}else
+			if (Keybindings.EnterVehicleKey.isPressed()) {
 				if (getClosestEntity() != null) {
 					EntityVehicle v = getClosestEntity();
 					RealLifeMod.network.sendToServer(new MountVehicleMessage(v.getEntityId()));
 				}
 			}
-			if (Keybindings.CharacterKey.isKeyDown()) {
-				Minecraft.getMinecraft().thePlayer.onKillCommand();
+			
+			if(Keybindings.PhoneKey.isPressed()){
+				Minecraft.getMinecraft().displayGuiScreen(new GuiPhone());
 			}
+
 		}
 
 	}
@@ -116,5 +122,5 @@ public class CommonHandler {
 		}
 		return i;
 	}
-
+	
 }

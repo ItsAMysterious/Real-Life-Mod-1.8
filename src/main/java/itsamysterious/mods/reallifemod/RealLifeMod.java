@@ -2,26 +2,36 @@ package itsamysterious.mods.reallifemod;
 
 import java.io.File;
 
+import itsamysterious.mods.reallifemod.client.ClientProxy;
 import itsamysterious.mods.reallifemod.common.CommonProxy;
 import itsamysterious.mods.reallifemod.common.ServerTickHandler;
 import itsamysterious.mods.reallifemod.config.RealLifeModConfig;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Blocks;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Items;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityDigitalFrame;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityRamp;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityTarmac;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Ramp;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Shelf;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TVTable;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Chair;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Computer;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DartBoard;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Drawer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DrinksFridge;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_IronFence;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Lantern;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Pinwheel;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_PowerLine;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Railing;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Sign;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TV;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Toilet;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Transformer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_VendingMachine;
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
+import itsamysterious.mods.reallifemod.core.gui.phone.PhoneRegistry;
+import itsamysterious.mods.reallifemod.core.gui.phone.apps.Browser;
+import itsamysterious.mods.reallifemod.core.gui.phone.apps.Phone;
 import itsamysterious.mods.reallifemod.core.handlers.ClientHandler;
 import itsamysterious.mods.reallifemod.core.handlers.CommonHandler;
 import itsamysterious.mods.reallifemod.core.handlers.GuiHandler;
@@ -120,6 +130,7 @@ public class RealLifeMod {
 		FMLCommonHandler.instance().bus().register(instance);
 		FMLCommonHandler.instance().bus().register(new CommonHandler());
 		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+		FMLCommonHandler.instance().bus().register(new ClientProxy());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
 		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new GuiHandler());
 		RealLifeMod_Blocks.defineBlocks();
@@ -131,6 +142,7 @@ public class RealLifeMod {
 		loadAddonPacks();
 		Vehicles.setupVehicles();
 		Signs.setupSigns();
+		setupApps();
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		RealLifeModConfig.syncConfig();
@@ -147,6 +159,12 @@ public class RealLifeMod {
 		if (event.getSide().isClient()) {
 			B3DLoader.instance.addDomain(Reference.ID);
 		}
+	}
+
+	private void setupApps() {
+		PhoneRegistry.registerApp(new Phone());
+		PhoneRegistry.registerApp(new Browser());
+
 	}
 
 	@EventHandler
@@ -218,7 +236,7 @@ public class RealLifeMod {
 	}
 
 	private void setupTileEntities() {
-		setupTile(TileEntityDigitalFrame.class);
+		setupTile(TileEntity_DigitalFrame.class);
 		setupTile(TileEntity_TV.class);
 		setupTile(TileEntity_Drawer.class);
 		setupTile(TileEntity_Computer.class);
@@ -232,8 +250,14 @@ public class RealLifeMod {
 		setupTile(TileEntity_PowerLine.class);
 		setupTile(TileEntity_Transformer.class);
 		setupTile(TileEntity_Pinwheel.class);
-		setupTile(TileEntityRamp.class);
-		setupTile(TileEntityTarmac.class);
+		setupTile(TileEntity_Ramp.class);
+		setupTile(TileEntity_TVTable.class);
+		setupTile(TileEntity_Shelf.class);
+		setupTile(TileEntity_IronFence.class);
+		setupTile(TileEntity_Railing.class);
+		setupTile(TileEntity_Table.class);
+		setupTile(TileEntity_DartBoard.class);
+		setupTile(TileEntity_Chair.class);
 	}
 
 	public void setupTile(Class<? extends TileEntity> class1) {

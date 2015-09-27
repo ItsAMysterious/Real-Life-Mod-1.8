@@ -20,7 +20,7 @@ import itsamysterious.mods.reallifemod.RealLifeMod;
 import itsamysterious.mods.reallifemod.Screenshotspack;
 import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
 import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityDigitalFrame;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -54,8 +54,8 @@ public class RenderPictureFrame extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f, int i) {
-		if (t!=null&&t instanceof TileEntityDigitalFrame) {
-			TileEntityDigitalFrame tile = (TileEntityDigitalFrame) t;
+		if (t!=null&&t instanceof TileEntity_DigitalFrame) {
+			TileEntity_DigitalFrame tile = (TileEntity_DigitalFrame) t;
 			if (!tile.isInvalid()) {
 				glPushMatrix();
 				glDisable(GL_CULL_FACE);

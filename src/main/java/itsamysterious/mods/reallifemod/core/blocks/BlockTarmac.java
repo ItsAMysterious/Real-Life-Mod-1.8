@@ -6,7 +6,7 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import itsamysterious.mods.reallifemod.RealLifeMod;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityTarmac;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Tarmac;
 import itsamysterious.mods.reallifemod.init.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -22,23 +22,23 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class BlockTarmac extends Block implements ITileEntityProvider {
+public class BlockTarmac extends Block {
 
 	public BlockTarmac(Material materialIn) {
 		super(Material.rock);
 		setCreativeTab(RealLifeMod.Cars);
 		setUnlocalizedName("blocktarmac");
 		GameRegistry.registerBlock(this, getUnlocalizedName().substring(5));
-		setBlockBounds(0, 0	, 0, 1,0.2f ,1);
+		setBlockBounds(0, 0	, 0, 1,1 ,1);
 
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn) {
-		TileEntityTarmac t = (TileEntityTarmac) worldIn.getTileEntity(pos);
+		/*TileEntityTarmac t = (TileEntityTarmac) worldIn.getTileEntity(pos);
 		entityIn.posY=(float)t.getHeight((float)entityIn.posX+0.001f%1,(float)entityIn.posZ+0.001f%1);
 		t.entities.clear();
-		t.entities.add(entityIn);
+		t.entities.add(entityIn);*/
 	}
 	
 
@@ -47,11 +47,6 @@ public class BlockTarmac extends Block implements ITileEntityProvider {
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			ItemStack stack) {
 		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityTarmac();
 	}
 
 	@Override

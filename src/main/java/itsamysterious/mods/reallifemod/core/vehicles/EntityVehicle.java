@@ -1,45 +1,23 @@
 package itsamysterious.mods.reallifemod.core.vehicles;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.channels.GatheringByteChannel;
-import java.nio.channels.ScatteringByteChannel;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.vector.Vector3f;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.ByteBufProcessor;
 import itsamysterious.mods.reallifemod.RealLifeMod;
-import itsamysterious.mods.reallifemod.core.handlers.Keybindings;
-import itsamysterious.mods.reallifemod.core.packets.MountVehicleMessage;
 import itsamysterious.mods.reallifemod.core.packets.UpdateVehiclePacket;
 import itsamysterious.mods.reallifemod.core.sounds.SoundPlayer;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISoundEventAccessor;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IEntityMultiPart;
-import net.minecraft.entity.boss.EntityDragonPart;
-import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.EntityRegistry.EntityRegistration;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -294,7 +272,7 @@ public class EntityVehicle extends Entity implements IEntityAdditionalSpawnData 
 
 		if (!this.worldObj.isRemote) {
 
-			/*List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
+			List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
 					this.getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
 			if (list != null && !list.isEmpty()) {
@@ -305,7 +283,7 @@ public class EntityVehicle extends Entity implements IEntityAdditionalSpawnData 
 						entity.applyEntityCollision(this);
 					}
 				}
-			}*/
+			}
 
 			if (this.ticksExisted % 4 == 0) {
 				worldObj.playSoundAtEntity(this, this.file.startsound.toString(), 1.0f, 1.0f + (float) this.P * 0.1f);
@@ -320,15 +298,8 @@ public class EntityVehicle extends Entity implements IEntityAdditionalSpawnData 
 			}
 			double x = Math.sin(Math.toRadians(rotationYaw));
 			double z = Math.cos(Math.toRadians(rotationYaw));
-
-			if (isCollidedVertically
-					&& worldObj
-							.getBlockState(
-									(new BlockPos((int) posX + x, (int) getPosition().getY() + 0.5, (int) posZ + z)))
-							.getBlock() != Blocks.air) {
-				motionX = 0;
-				motionY += 0.1;
-				motionZ = 0;
+			if(worldObj.getBlockState(getPosition().subtract(new Vec3i(0,1,0))).getBlock()!=Blocks.air){
+				//this.posY+=0.5;
 			}
 		}
 

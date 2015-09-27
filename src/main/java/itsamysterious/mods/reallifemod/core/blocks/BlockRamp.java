@@ -2,8 +2,8 @@ package itsamysterious.mods.reallifemod.core.blocks;
 
 import itsamysterious.mods.reallifemod.RealLifeMod;
 import itsamysterious.mods.reallifemod.core.RLMBlockContainer;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityRamp;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityTarmac;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Ramp;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Tarmac;
 import itsamysterious.mods.reallifemod.core.tiles.RLMTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -19,16 +19,16 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class BlockRamp extends RLMBlockContainer{
 	
 	public BlockRamp() {
-		super(Material.iron);
+		super(Material.rock);
 		setUnlocalizedName("blockRamp");
 		setCreativeTab(RealLifeMod.Cars);
 		GameRegistry.registerBlock(this, getUnlocalizedName().substring(5));
-		setBlockBounds(0, 0, 0, 1, 0.25f, 1);
+		setBlockBounds(0, 0, 0, 0.95f, 0.25f, 0.95f);
 	}
 	
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn) {
-		TileEntityRamp t = (TileEntityRamp) worldIn.getTileEntity(pos);
+		TileEntity_Ramp t = (TileEntity_Ramp) worldIn.getTileEntity(pos);
 		entityIn.posY=(float)t.getHeight((float)entityIn.posX+0.001f%1,(float)entityIn.posZ+0.001f%1);
 		t.entities.clear();
 		t.entities.add(entityIn);
@@ -46,7 +46,7 @@ public class BlockRamp extends RLMBlockContainer{
     
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityRamp();
+		return new TileEntity_Ramp();
 	}
 	
 }

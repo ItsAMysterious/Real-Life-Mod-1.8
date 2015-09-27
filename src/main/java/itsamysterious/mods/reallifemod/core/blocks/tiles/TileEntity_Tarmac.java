@@ -14,7 +14,7 @@ import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class TileEntityTarmac extends TileEntity implements IUpdatePlayerListBox {
+public class TileEntity_Tarmac extends TileEntity implements IUpdatePlayerListBox {
 	public final List<Entity> entities = new ArrayList<Entity>();
 	private int depth;
 	private int width;
@@ -26,7 +26,7 @@ public class TileEntityTarmac extends TileEntity implements IUpdatePlayerListBox
 	private static float[][] heights;
 
 
-	public TileEntityTarmac() {
+	public TileEntity_Tarmac() {
 			try {
 				InputStream imagefile = Minecraft.getMinecraft().getResourceManager()
 						.getResource(new ResourceLocation(Reference.ID + ":textures/blocks/tarmac_heightmap.png"))

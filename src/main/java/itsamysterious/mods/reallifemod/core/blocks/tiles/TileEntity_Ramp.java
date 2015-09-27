@@ -15,7 +15,7 @@ import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class TileEntityRamp extends RLMTileEntity implements IUpdatePlayerListBox {
+public class TileEntity_Ramp extends RLMTileEntity implements IUpdatePlayerListBox {
 	public final List<Entity> entities = new ArrayList<Entity>();
 	private int depth;
 	private int width;
@@ -26,22 +26,20 @@ public class TileEntityRamp extends RLMTileEntity implements IUpdatePlayerListBo
 	private static BufferedImage heightfile;
 	private static float[][] heights;
 
+	public TileEntity_Ramp() {
+		try {
+			InputStream imagefile = Minecraft.getMinecraft().getResourceManager()
+					.getResource(new ResourceLocation(Reference.ID + ":textures/blocks/rampmap.png")).getInputStream();
+			this.heightfile = ImageIO.read(imagefile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	public TileEntityRamp() {
-			try {
-				InputStream imagefile = Minecraft.getMinecraft().getResourceManager()
-						.getResource(new ResourceLocation(Reference.ID + ":textures/blocks/rampmap.png"))
-						.getInputStream();
-				this.heightfile = ImageIO.read(imagefile);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			this.heightScale = 1;
-			this.widthScale = 1;
-			if (heightfile != null) {
-				setupHeights();
-			}
+		this.heightScale = 1;
+		this.widthScale = 1;
+		if (heightfile != null) {
+			setupHeights();
+		}
 	}
 
 	public void setupHeights() {
@@ -83,6 +81,11 @@ public class TileEntityRamp extends RLMTileEntity implements IUpdatePlayerListBo
 				{
 					double localX = e.posX % 1;
 					double localZ = e.posZ % 1;
+					System.out.println(rotation);
+					localX = Math.abs(localX*Math.sin(Math.toRadians(rotation*90)));
+					localZ = Math.abs(localZ*Math.cos(Math.toRadians(rotation*90)));
+					System.out.println(localX);
+
 					int x = (int) (localX * width);
 					int y = (int) (localZ * depth);
 					if (heightfile != null) {

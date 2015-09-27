@@ -5,13 +5,13 @@ import itsamysterious.mods.reallifemod.core.tiles.RLMTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 
-public class TileEntityDigitalFrame extends RLMTileEntity implements IUpdatePlayerListBox {
+public class TileEntity_DigitalFrame extends RLMTileEntity implements IUpdatePlayerListBox {
 	private ItemStack item;
 	public int image;
 	private int age;
 	private boolean isVideomode;
 
-	public TileEntityDigitalFrame() {
+	public TileEntity_DigitalFrame() {
 		this.image = 0;
 	}
 

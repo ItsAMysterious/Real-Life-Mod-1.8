@@ -29,7 +29,7 @@ public class RenderPinwheel extends TileEntitySpecialRenderer {
 			glPushMatrix();
 			glDisable(GL_CULL_FACE);
 			glTranslatef((float) x + 0.5f, (float) y, (float) z + 0.5f);
-			GL11.glRotated(tile.rotation, 0, 1, 0);
+			GL11.glRotated(tile.rotation*90, 0, 1, 0);
 			bindTexture(texture);
 			GL11.glScalef(3, 3, 3);
 			model.renderPart("poll");

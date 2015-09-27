@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityTarmac;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Tarmac;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -33,9 +33,9 @@ public class BlockCustomCollision extends Block implements ITileEntityProvider {
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn != null && worldIn.getTileEntity(pos) != null
-				&& worldIn.getTileEntity(pos) instanceof TileEntityTarmac) {
+				&& worldIn.getTileEntity(pos) instanceof TileEntity_Tarmac) {
 			if (!worldIn.isRemote) {
-				TileEntityTarmac t = (TileEntityTarmac) worldIn.getTileEntity(pos);
+				TileEntity_Tarmac t = (TileEntity_Tarmac) worldIn.getTileEntity(pos);
 				t.entities.clear();
 				t.entities.add(entityIn);
 				System.out.println("Entities have been set!");

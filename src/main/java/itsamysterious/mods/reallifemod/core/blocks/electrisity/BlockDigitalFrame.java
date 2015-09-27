@@ -3,7 +3,7 @@ package itsamysterious.mods.reallifemod.core.blocks.electrisity;
 import itsamysterious.mods.reallifemod.RealLifeMod;
 import itsamysterious.mods.reallifemod.core.RLMBlockContainer;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Blocks;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntityDigitalFrame;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
 import itsamysterious.mods.reallifemod.core.tiles.RLMTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -26,7 +26,7 @@ public class BlockDigitalFrame extends RLMBlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityDigitalFrame();
+		return new TileEntity_DigitalFrame();
 	}
 	
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
