@@ -25,7 +25,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Lists;
 
-public class GuiChangelog extends GuiScreen{
+public class GuiChangelog extends RLMCustomGui{
 	private GuiScreen parentScreen;
 	private GuiTextField changes;
     private static final Logger logger = LogManager.getLogger();

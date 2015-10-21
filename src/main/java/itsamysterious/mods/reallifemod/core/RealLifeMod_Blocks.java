@@ -74,7 +74,7 @@ public class RealLifeMod_Blocks {
 		blockList.add(blockironfence = new BlockIronFence(Material.iron));
 		blockList.add(railing = new BlockRailing());
 		blockList.add(table=new BlockTable());
-		blockList.add(chair=new BlockChair());
+	//	blockList.add(chair=new BlockChair());
 
 		blocks3d.add(dartBoard = new BlockDartboard());
 		blocks3d.add(lantern = new BlockLantern().setCreativeTab(RealLifeMod.Cars));

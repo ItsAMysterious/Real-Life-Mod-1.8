@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 
-public class GuiNameselection extends GuiScreen{
+public class GuiNameselection extends RLMCustomGui{
 	private GuiModInit guiModInit;
 	
 	public GuiNameselection(GuiModInit themenu) {

@@ -1,7 +1,9 @@
 package itsamysterious.mods.reallifemod.core.packets;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import itsamysterious.mods.reallifemod.core.vehicles.VehicleFile;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class UpdateVehiclePacket implements IMessage{
@@ -15,7 +17,7 @@ public class UpdateVehiclePacket implements IMessage{
 	public UpdateVehiclePacket() {
 	}
 	
-	public UpdateVehiclePacket(int id, double newX, double newY, double newZ, float newRot){
+	public UpdateVehiclePacket(int id, double newX, double newY, double newZ, float newRot, String filename){
 		this.x=newX;
 		this.y=newY;
 		this.z=newZ;

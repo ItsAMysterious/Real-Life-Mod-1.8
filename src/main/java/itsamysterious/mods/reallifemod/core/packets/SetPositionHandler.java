@@ -17,10 +17,11 @@ public class SetPositionHandler implements IMessageHandler<UpdateVehiclePacket, 
 		final IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj;
 		mainThread.addScheduledTask(new Runnable() {
 			World world = ctx.getServerHandler().playerEntity.worldObj;
-			EntityVehicle v = (EntityVehicle)world.getEntityByID(message.id);
+			EntityVehicle v = (EntityVehicle) world.getEntityByID(message.id);
+
 			@Override
 			public void run() {
-				v.setPositionAndRotation(message.x, message.y, message.z,message.newRot,v.rotationPitch);
+				v.setPositionAndRotation(message.x, message.y, message.z, message.newRot, 0);
 			}
 		});
 		return null;

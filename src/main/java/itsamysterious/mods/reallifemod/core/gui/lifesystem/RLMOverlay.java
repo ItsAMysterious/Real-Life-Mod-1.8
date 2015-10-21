@@ -17,12 +17,12 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL12;
 
 import itsamysterious.mods.reallifemod.RealLifeMod;
-import itsamysterious.mods.reallifemod.core.MathUtil;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Electric;
 import itsamysterious.mods.reallifemod.core.gui.GuiGamestart;
 import itsamysterious.mods.reallifemod.core.handlers.Keybindings;
 import itsamysterious.mods.reallifemod.core.items.itemControlDevice;
 import itsamysterious.mods.reallifemod.core.lifesystem.RLMPlayerProps;
+import itsamysterious.mods.reallifemod.core.utils.MathUtils;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

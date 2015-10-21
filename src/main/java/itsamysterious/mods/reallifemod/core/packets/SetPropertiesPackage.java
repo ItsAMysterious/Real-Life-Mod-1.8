@@ -35,7 +35,6 @@ public class SetPropertiesPackage implements IMessage{
         ByteBufUtils.writeUTF8String(buf, gender);
         buf.writeInt(id);
 
-
 	}
 
 }

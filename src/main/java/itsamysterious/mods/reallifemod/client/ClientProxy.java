@@ -32,6 +32,7 @@ import itsamysterious.mods.reallifemod.core.gui.lifesystem.RLMOverlay;
 import itsamysterious.mods.reallifemod.core.handlers.Keybindings;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderPylon;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderVehicle;
+import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderWheel;
 import itsamysterious.mods.reallifemod.core.rendering.items.GenericBlockItemRenderer;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.RenderDartboard;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.RenderIronFence;
@@ -56,7 +57,9 @@ import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.render_Toilet;
 import itsamysterious.mods.reallifemod.core.roads.signs.RenderSign;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasPump;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasTank;
+import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
+import itsamysterious.mods.reallifemod.core.vehicles.EntityWheel;
 import itsamysterious.mods.reallifemod.init.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -112,8 +115,9 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_DartBoard.class, new RenderDartboard());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Table.class, new RenderTable());
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityVehicle.class, new RenderVehicle());
+		RenderingRegistry.registerEntityRenderingHandler(EntityDriveable.class, new RenderVehicle());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPylon.class, new RenderPylon());
+		RenderingRegistry.registerEntityRenderingHandler(EntityWheel.class, new RenderWheel());
 
 		MinecraftForge.EVENT_BUS.register(new RLMOverlay(Minecraft.getMinecraft()));
 	}

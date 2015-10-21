@@ -11,9 +11,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
 import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.core.MathUtil;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Electric;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_PowerLine;
+import itsamysterious.mods.reallifemod.core.utils.MathUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -49,12 +49,12 @@ public class Render_PowerLine extends TileEntitySpecialRenderer {
 		if (tile.storedPos != null) {
 			BlockPos pos = tile.storedPos;
 			BlockPos pos2 = tile.getPos();
-			Vector3f normalized1 = MathUtil.blockPosVec(pos).normalise(null);
+			Vector3f normalized1 = MathUtils.blockPosVec(pos).normalise(null);
 			normalized1.setY(0);	
-			Vector3f normalized2 = MathUtil.blockPosVec(pos2).normalise(null);
+			Vector3f normalized2 = MathUtils.blockPosVec(pos2).normalise(null);
 			normalized2.setY(0);
 
-			double distance = euclidianDistance(MathUtil.blockPosVec(pos), MathUtil.blockPosVec(pos2));
+			double distance = euclidianDistance(MathUtils.blockPosVec(pos), MathUtils.blockPosVec(pos2));
 			double scalefactor = distance * 5.81;
 			double stepvalue=0;
 

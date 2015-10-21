@@ -8,19 +8,19 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 
-public class TileEntity_Chair extends RLMTileEntity implements IUpdatePlayerListBox {
+public class TileEntity_Chair extends RLMTileEntity  {
 
-	private int entityID;
+	private int entityID=0;
 
-	@Override
+	/*@Override
 	public void update() {
-		if (!this.isEmpty()) {
+		/*if (!this.isEmpty()&&getSittingEntity()!=null) {
 			getSittingEntity().setPosition(pos.getX(), pos.getY() + 1, pos.getZ());
 			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
 				standUp();
 			}
 		}
-	}
+	}*/
 
 	public void sitDown(EntityPlayer p) {
 		this.standUp();

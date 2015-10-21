@@ -3,12 +3,12 @@ package itsamysterious.mods.reallifemod.core.gui.lifesystem;
 import java.awt.Color;
 import java.io.IOException;
 
+import itsamysterious.mods.reallifemod.core.gui.RLMCustomGui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
-public class GuiCharacterMenu extends GuiScreen{
+public class GuiCharacterMenu extends RLMCustomGui{
 
-	public static final int ID = 100;
 	
 	public GuiCharacterMenu() {
 	}

@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
 
-public class GuiGamestart extends GuiScreen{
+public class GuiGamestart extends RLMCustomGui{
 	private int lengthshown=0;
 	private GuiButton nextButton;
 	

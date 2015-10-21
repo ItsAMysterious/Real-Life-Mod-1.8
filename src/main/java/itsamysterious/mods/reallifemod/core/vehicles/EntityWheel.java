@@ -9,21 +9,24 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
+public class EntityWheel extends Entity implements IEntityAdditionalSpawnData {
 	public int ID;
 	public EntityDriveable parent;
 	public float rotationRoll;
 	private int vehicleID;
+	@SideOnly(Side.CLIENT)
 	private boolean foundVehicle;
 	public double mass = 10;
 
-	public EntitySeat(World worldIn) {
+	public EntityWheel(World worldIn) {
 		super(worldIn);
 		setSize(1, 1);
 	}
 
-	public EntitySeat(World worldIn, EntityDriveable entityVehicle, int id) {
+	public EntityWheel(World worldIn, EntityDriveable entityVehicle, int id) {
 		this(worldIn);
 		parent = entityVehicle;
 		vehicleID = entityVehicle.getEntityId();
@@ -37,27 +40,41 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	private void initPosition() {
-		if (!worldObj.isRemote) {
-			VehicleFile file = parent.getFile();
-			Vector3f pos = parent.getPositionVectorFloat();
+		System.out.println("Initialiizing Position:");
 
-			Vector3f wantedPos = file.wheelPositions[ID];
-			setPosition(pos.x, pos.y + wantedPos.y, pos.z);
-
-			prevPosX = posX;
-			prevPosY = posY;
-			prevPosZ = posZ;
+		VehicleFile file = parent.getFile();
+		if (file == null) {
+			return;
 		}
+		Vector3f pos = parent.getPositionVectorFloat();
+		if (file.wheelPositions != null && ID <= file.wheelPositions.length) {
+			Vector3f wantedPos = new Vector3f(0, 0, 0);
+
+			if (parent.axes != null) {
+				wantedPos = parent.axes.findLocalVectorGlobally(file.wheelPositions[ID]);
+			}else
+			{
+				System.out.println("Axes are null!");
+			}
+			setPosition(pos.x + wantedPos.x, pos.y + wantedPos.y, pos.z + wantedPos.z);
+
+		} else {
+			System.out.println("Too large!");
+
+		}
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
 	}
 
 	@Override
 	public void onUpdate() {
 		if (worldObj.isRemote && !foundVehicle) {
-			if (!(worldObj.getEntityByID(vehicleID) instanceof EntityVehicle))
+			if (!(worldObj.getEntityByID(vehicleID) instanceof EntityDriveable))
 				return;
 			parent = (EntityDriveable) worldObj.getEntityByID(vehicleID);
 			foundVehicle = true;
-			parent.seats[ID] = this;
+			parent.wheels[ID] = this;
 		}
 
 		if (parent == null)
@@ -66,17 +83,10 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
 		if (!addedToChunk)
 			worldObj.spawnEntityInWorld(this);
 		if (parent.getFile() != null && parent.getFile().wheelPositions != null) {
-			if (ID <= parent.getFile().wheelPositions.length) {
-				if (ID == 2 || ID == 3) {
-					this.rotationYaw = (float) (parent.rotationYaw + parent.steeringAngle);
-				} else
-					this.rotationYaw = parent.rotationYaw;
 
-				double rotYaw = Math.toRadians(parent.rotationYaw + 90);
-				motionX = parent.motionX;
-				motionZ = parent.motionZ;
-			}
 		}
+
+		rotationPitch = parent.wheelsAngle;
 
 		moveEntity(motionX, motionY, motionZ);
 
@@ -84,9 +94,9 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
 			this.motionY *= 0.9800000190734863D;
 
 		} else {
-			motionX*=0.9;
+			motionX *= 0.9;
 			this.motionY *= -0.5D;
-			motionZ*=0.9;
+			motionZ *= 0.9;
 
 		}
 
@@ -111,11 +121,10 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
 	public void readSpawnData(ByteBuf data) {
 		vehicleID = data.readInt();
 		ID = data.readInt();
-		if (worldObj.getEntityByID(vehicleID) instanceof EntityVehicle)
+		if (worldObj.getEntityByID(vehicleID) instanceof EntityDriveable)
 			parent = (EntityDriveable) worldObj.getEntityByID(vehicleID);
 		if (parent != null)
 			setPosition(posX, posY, posZ);
-		initPosition();
 	}
 
 	public Vector3d getPositionVectorFloat() {
@@ -123,7 +132,7 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	public double getSpeedXZ() {
-		return Math.sqrt(motionX+motionX*motionZ*motionZ);
+		return Math.sqrt(motionX + motionX * motionZ * motionZ);
 	}
 
 }

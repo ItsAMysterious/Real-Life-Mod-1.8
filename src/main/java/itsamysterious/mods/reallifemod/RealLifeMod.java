@@ -8,14 +8,10 @@ import itsamysterious.mods.reallifemod.common.ServerTickHandler;
 import itsamysterious.mods.reallifemod.config.RealLifeModConfig;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Blocks;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Items;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Ramp;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Shelf;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TVTable;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Chair;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Computer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DartBoard;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Drawer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DrinksFridge;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_IronFence;
@@ -23,8 +19,12 @@ import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Lantern;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Pinwheel;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_PowerLine;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Railing;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Ramp;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Shelf;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Sign;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TV;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TVTable;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Toilet;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Transformer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_VendingMachine;
@@ -49,7 +49,8 @@ import itsamysterious.mods.reallifemod.core.packets.UpdateVehiclePacket;
 import itsamysterious.mods.reallifemod.core.roads.signs.Signs;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasPump;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasTank;
-import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
+import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
+import itsamysterious.mods.reallifemod.core.vehicles.EntityWheel;
 import itsamysterious.mods.reallifemod.core.vehicles.VehicleFile;
 import itsamysterious.mods.reallifemod.core.vehicles.Vehicles;
 import itsamysterious.mods.reallifemod.init.Reference;
@@ -95,7 +96,9 @@ public class RealLifeMod {
 	public static Configuration config;
 
 	public static SimpleNetworkWrapper network;
-	
+
+	public static int[] GUIIDs = new int[0];
+
 	public static CreativeTabs Technologie = new CustomCreativeTab("Real Life Technologie") {
 		@SideOnly(Side.CLIENT)
 		public Item getTabIconItem() {
@@ -197,12 +200,13 @@ public class RealLifeMod {
 
 	public void registerEntities() {
 		ModEntityID = EntityRegistry.findGlobalUniqueEntityId();
-		EntityRegistry.registerModEntity(EntityVehicle.class, "CarEntity", 1928, RealLifeMod.instance, 256, 3, true);
+		EntityRegistry.registerModEntity(EntityDriveable.class, "CarEntity", ModEntityID++, RealLifeMod.instance, 256, 1, true);
 		EntityRegistry.registerModEntity(EntityPylon.class, "EntityPylon", ModEntityID++, RealLifeMod.instance, 80, 1,
 				true);
-		// EntityRegistry.registerModEntity(EntitySeat.class, "EntitySeat",
-		// EntityRegistry.findGlobalUniqueEntityId(), RealLifeMod.instance, 80,
-		// 1, true);
+		EntityRegistry.registerModEntity(EntityWheel.class, "EntityWheel", ModEntityID++, RealLifeMod.instance, 80, 1,
+				true);
+		EntityRegistry.registerModEntity(EntityWheel.class, "EntitySeat", ModEntityID++, RealLifeMod.instance, 80, 1,
+				true);
 
 	}
 
@@ -284,6 +288,10 @@ public class RealLifeMod {
 								new ItemStack(RealLifeMod_Items.flour, 1, 1),
 								new ItemStack(Items.water_bucket, 1, 1) });
 		GameRegistry.addSmelting(RealLifeMod_Items.dough, new ItemStack(Items.bread, 3), 0.1f);
+	}
+
+	public static int findUnusedGuiID() {
+		return GUIIDs[GUIIDs.length] + 1;
 	}
 
 }

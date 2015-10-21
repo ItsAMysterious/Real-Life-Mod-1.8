@@ -22,7 +22,7 @@ public class BlockDartboard extends RLMBlockContainer{
 	}
 	@Override
 	public int getRenderType() {
-		return 3;
+		return -1;
 	}
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {

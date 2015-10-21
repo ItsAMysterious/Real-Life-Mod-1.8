@@ -20,7 +20,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 public class GuiModInit extends GuiScreen {
-	public static final int ID = 0;
+	public static final int ID=100;
 	private GuiMainMenu menu;
 	private int timeshown;
 	private GuiButton nextButton;
