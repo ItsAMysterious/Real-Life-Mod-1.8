@@ -60,10 +60,9 @@ public class Vehicles {
 			@Override
 			public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 					EnumFacing side, float hitX, float hitY, float hitZ) {
-				EntityDriveable vehicle = new EntityDriveable(worldIn, f, pos.getX(), pos.getY() + 1, pos.getZ(),
-						playerIn);
+				EntityCar car = new EntityCar(worldIn, f, pos.getX(), pos.getY() + 1, pos.getZ(), playerIn);
 				if (!worldIn.isRemote) {
-					worldIn.spawnEntityInWorld(vehicle);
+					worldIn.spawnEntityInWorld(car);
 				}
 				return true;
 			}

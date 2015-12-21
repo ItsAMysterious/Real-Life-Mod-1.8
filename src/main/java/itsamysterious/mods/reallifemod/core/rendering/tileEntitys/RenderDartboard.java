@@ -2,10 +2,10 @@ package itsamysterious.mods.reallifemod.core.rendering.tileEntitys;
 
 import org.lwjgl.opengl.GL11;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.core.blocks.BlockIronFence;
-import itsamysterious.mods.reallifemod.core.blocks.BlockRailing;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.core.blocks.Block_IronFence;
+import itsamysterious.mods.reallifemod.core.blocks.Block_Railing;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DartBoard;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_IronFence;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Railing;

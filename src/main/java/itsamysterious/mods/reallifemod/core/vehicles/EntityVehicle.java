@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import io.netty.buffer.ByteBuf;
 import itsamysterious.mods.reallifemod.RealLifeMod;
-import itsamysterious.mods.reallifemod.core.handlers.Keybindings;
+import itsamysterious.mods.reallifemod.core.eventhandlers.KeyHandler;
 import itsamysterious.mods.reallifemod.core.packets.UpdateVehiclePacket;
 import itsamysterious.mods.reallifemod.core.sounds.SoundPlayer;
 import itsamysterious.mods.reallifemod.core.utils.Physics;
@@ -357,7 +357,7 @@ public class EntityVehicle extends Entity implements IEntityAdditionalSpawnData 
 			// OpenContainerPackage(VehicleGui.ID, this));
 			// }
 
-			if (Keyboard.isKeyDown(Keybindings.Horn.getKeyCode())) {
+			if (Keyboard.isKeyDown(KeyHandler.Horn.getKeyCode())) {
 				// RealLifeMod.network.sendToServer(new
 				// OpenContainerPackage(VehicleGui.ID, this));
 			}
@@ -416,8 +416,9 @@ public class EntityVehicle extends Entity implements IEntityAdditionalSpawnData 
 	}
 
 	private double accelerationDrag() {
-		double momentOfInertia = (4 * (wheels[0].mass)) * motorspeed;
-		return (momentOfInertia * getFullMass()) * throttle;
+		//double momentOfInertia = (4 * (wheels[0].mass)) * motorspeed;
+		//return (momentOfInertia * getFullMass()) * throttle;
+		return 0;
 	}
 
 	private double getFullMass() {

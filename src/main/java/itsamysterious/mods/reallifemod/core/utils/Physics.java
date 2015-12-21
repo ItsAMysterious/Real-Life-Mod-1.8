@@ -12,6 +12,17 @@ public class Physics {
 	public static final double g = -9.81;
 
 	public Physics() {
+
+	}
+
+	public static float getRollDragCoefficientForBlock(Block block) {
+		if (rollDragCoefficients.containsKey(block)) {
+			return rollDragCoefficients.get(block);
+		} else
+			return 0.050f;
+	}
+
+	public static void init() {
 		rollDragCoefficients.put(Blocks.dirt, 0.050f);
 		rollDragCoefficients.put(Blocks.grass, 0.055f);
 		rollDragCoefficients.put(RealLifeMod_Blocks.tarmac, 0.013f);
@@ -19,13 +30,6 @@ public class Physics {
 		rollDragCoefficients.put(Blocks.cobblestone, 0.0225f);
 		rollDragCoefficients.put(Blocks.sand, 0.3f);
 		rollDragCoefficients.put(Blocks.gravel, 0.02f);
-	}
-
-	public static float getRollDragCoefficientForBlock(Block block) {
-		if(rollDragCoefficients.containsKey(block)){
-			return rollDragCoefficients.get(block);
-		}else
-		return 0.050f;
 	}
 
 }

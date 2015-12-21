@@ -63,4 +63,8 @@ public class CustomRotationAxes {
 		return rotationPitch;
 	}
 
+	@Override
+	protected CustomRotationAxes clone() {
+		return new CustomRotationAxes(this.rotationYaw, this.rotationPitch, this.rotationRoll);
+	}
 }

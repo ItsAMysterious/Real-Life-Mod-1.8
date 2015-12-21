@@ -1,6 +1,6 @@
 package itsamysterious.mods.reallifemod.core.blocks.tiles;
 
-import itsamysterious.mods.reallifemod.core.blocks.electrisity.BlockPowerLine;
+import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_PowerLine;
 import itsamysterious.mods.reallifemod.core.tiles.RLMTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

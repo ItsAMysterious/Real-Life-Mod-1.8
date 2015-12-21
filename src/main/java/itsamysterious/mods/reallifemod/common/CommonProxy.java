@@ -44,4 +44,8 @@ public class CommonProxy {
 	public void loadCoreModules() {
 	}
 
+	public boolean isThePlayer(EntityPlayer riddenByEntity) {
+		return false;
+	}
+
 }

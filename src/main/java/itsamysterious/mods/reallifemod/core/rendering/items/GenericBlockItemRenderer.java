@@ -9,7 +9,8 @@ import static org.lwjgl.opengl.GL11.glRotated;
 import static org.lwjgl.opengl.GL11.glScaled;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import itsamysterious.mods.reallifemod.config.RealLifeModConfig;
+
+import itsamysterious.mods.reallifemod.RealLifeModConfig;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TV;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

@@ -1,13 +1,17 @@
 package itsamysterious.mods.reallifemod.core.vehicles;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import io.netty.buffer.ByteBuf;
-import itsamysterious.mods.reallifemod.core.utils.MathUtils;
-import itsamysterious.mods.reallifemod.core.utils.Physics;
+import itsamysterious.mods.reallifemod.RealLifeMod;
+import itsamysterious.mods.reallifemod.api.IControllable;
+import itsamysterious.mods.reallifemod.core.packets.ControlableInputPacket;
+import itsamysterious.mods.reallifemod.core.packets.PacketDriveableKeyHeld;
+import itsamysterious.mods.reallifemod.core.packets.UpdateControlPackage;
+import itsamysterious.mods.reallifemod.core.sounds.CustomSound;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -17,122 +21,171 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class EntityDriveable extends Entity implements IEntityAdditionalSpawnData {
+public class EntityDriveable extends Entity implements IControllable, IEntityAdditionalSpawnData {
 
 	private String filename;
-	private double throttle;
-	// Durch die zwei unabhängigen geschwindigkeiten können die räder
-	// durchdrehen!
-	private double motorspeed;
-	// will be the motorspeed reduced by the forces.
-	private double actualspeed;
-	float steeringAngle;
-	float wheelsAngle;
+	public double throttle;
 
-	private boolean isLightOn;
+	public double serverPosX, serverPosY, serverPosZ;
+	// Durch die zwei unabhängigen geschwindigkeiten können die rädery
+	// durchdrehen!
+	public double motorspeed;
+	// will be the motorspeed reduced by the forces.
+	public double actualspeed;
+	public float steeringAngle;
+	public float wheelsAngle;
+
+	public boolean isLightOn;
 
 	public EntitySeat[] seats;
 	public EntityWheel[] wheels;
 	public float rotationRoll;
 	public float prevRotationRoll;
-	public double fuellsevel;
 	public double fuellevel;
+
 	public CustomRotationAxes axes;
+	public CustomRotationAxes prevAxes;
+
+	public CustomSound startsound;
+	public CustomSound stopsound;
+	public CustomSound runsound;
+	public CustomSound throttlesound;
+
+	private boolean syncFromServer;
+	protected int serverPositionTransitionTicker;
+	protected float serverYaw;
+	protected float serverPitch;
+	private Vector3f angularVelocity;
+	protected float serverRoll;
+	private boolean leftMouseHeld;
+	private boolean rightMouseHeld;
+	
+	//Depending on the health, the model renders different?
+	public float health;
+
+
+	/**
+	 * All the stuff for playing the sounds right
+	 */
+	public int ticksSinceLeft = 0;
+	public int ticksSinceEntered = 0;
+	public int loopingsoundposition;
 
 	public EntityDriveable(World worldIn) {
 		super(worldIn);
-		axes = new CustomRotationAxes(0,0,0);
+		axes = new CustomRotationAxes();
 		preventEntitySpawning = true;
 		setSize(1F, 1F);
 		ignoreFrustumCheck = true;
 		renderDistanceWeight = 200D;
-		stepHeight = 1.0F;
 	}
 
 	public EntityDriveable(World world, VehicleFile f, double x, double y, double z, EntityPlayer placer) {
 		this(world);
 		filename = f.vehicleName;
-		System.out.println("Now running initFile!");
-		initFile(f, false);
 		setPosition(x, y, z);
-		if (placer != null)
-			rotateYaw(placer.rotationYaw + 90F);
-		stepHeight = 1.0F;
-
-	}
-
-	// Called on client
-	@Override
-	public void writeSpawnData(ByteBuf data) {
-		ByteBufUtils.writeUTF8String(data, this.filename);
-
-		data.writeFloat(axes.getYaw());
-		data.writeFloat(axes.getPitch());
-		data.writeFloat(axes.getRoll());
-	}
-
-	// Called on client
-	@Override
-	public void readSpawnData(ByteBuf data) {
-		try {
-			filename = ByteBufUtils.readUTF8String(data);
-			if(axes!=null){
-				axes = new CustomRotationAxes(0,0,0);
-				axes.setAngles(data.readFloat(), data.readFloat(), data.readFloat());
-				prevRotationYaw = axes.getYaw();
-				prevRotationPitch = axes.getPitch();
-				prevRotationRoll = axes.getRoll();
-			}else
-				System.out.println("Axes are null");
-
-			initFile(getFile(), true);
-
-		} catch (Exception e) {
-			System.out.println("Did not work!");
-			super.setDead();
-			e.printStackTrace();
-		}
+		axes.setAngles(rotationYaw, rotationPitch, rotationRoll);
 	}
 
 	protected void initFile(VehicleFile f, boolean isClient) {
 
-		/*
-		 * seats = new EntitySeat[f.numDrivers]; for (int i = 0; i <
-		 * seats.length; i++) {
-		 * 
-		 * if (!isClient) { seats[i] = new EntitySeat(worldObj, this, i);
-		 * worldObj.spawnEntityInWorld(seats[i]); } }
-		 */
-
-		// Initialisation of wheels
-
-		wheels = new EntityWheel[4];
+		wheels = new EntityWheel[f.wheelPositions.length];
 		for (int i = 0; i < wheels.length; i++) {
-
 			if (!isClient) {
 				wheels[i] = new EntityWheel(worldObj, this, i);
 				worldObj.spawnEntityInWorld(wheels[i]);
 			}
 		}
 
-		stepHeight = 1.0f;
+		stepHeight = f.wheelStepHeight;
+		this.startsound = new CustomSound(f.startsound.getSoundLocation(), f.startsound.length);
+		this.stopsound = new CustomSound(f.stopsound.getSoundLocation(), f.stopsound.length);
+		this.throttlesound = new CustomSound(f.throttlesound.getSoundLocation(), f.throttlesound.length);
+		this.runsound = new CustomSound(f.enginesound.getSoundLocation(), f.enginesound.length);
+
+	}
+
+	public void setPosition(double x, double y, double z) {
+		super.setPosition(x, y, z);
+		if (isClient()) {
+			// RealLifeMod.network.sendToServer(new UpdateControlPackage());
+		}
+	}
+
+	@Override
+	public void func_180426_a(double d, double d1, double d2, float f, float f1, int i, boolean b) {
+		if (ticksExisted > 1)
+			return;
+		if (riddenByEntity instanceof EntityPlayer && RealLifeMod.proxy.isThePlayer((EntityPlayer) riddenByEntity)) {
+		} else {
+			if (syncFromServer) {
+				serverPositionTransitionTicker = i + 5;
+			} else {
+				double var10 = d - posX;
+				double var12 = d1 - posY;
+				double var14 = d2 - posZ;
+				double var16 = var10 * var10 + var12 * var12 + var14 * var14;
+
+				if (var16 <= 1.0D) {
+					return;
+				}
+
+				serverPositionTransitionTicker = 3;
+			}
+			serverPosX = d;
+			serverPosY = d1;
+			serverPosZ = d2;
+			serverYaw = f;
+			serverPitch = f1;
+		}
+	}
+
+	public void setPositionRotationAndMotion(double x, double y, double z, float yaw, float pitch, float roll,
+			double motX, double motY, double motZ, float velYaw, float velPitch, float velRoll, float throt,
+			float steeringYaw) {
+		if (worldObj.isRemote) {
+			serverPosX = x;
+			serverPosY = y;
+			serverPosZ = z;
+			serverYaw = yaw;
+			serverPitch = pitch;
+			serverRoll = roll;
+			serverPositionTransitionTicker = 5;
+		} else {
+			setPosition(x, y, z);
+			prevRotationYaw = yaw;
+			prevRotationPitch = pitch;
+			prevRotationRoll = roll;
+			setRotation(yaw, pitch, roll);
+		}
+		// Set the motions regardless of side.
+		motionX = motX;
+		motionY = motY;
+		motionZ = motZ;
+		angularVelocity = new Vector3f(velYaw, velPitch, velRoll);
+		throttle = throt;
+	}
+
+	protected void setRotation(float yaw, float pitch, float roll) {
+		super.setRotation(yaw, pitch);
+		axes.setAngles(yaw, pitch, roll);
 	}
 
 	// Called on Server
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound tagCompund) {
 		filename = tagCompund.getString("VehicleName");
+		initFile(Vehicles.get(filename), false);
+
 		prevRotationYaw = tagCompund.getFloat("RotationYaw");
 		prevRotationPitch = tagCompund.getFloat("RotationPitch");
 		prevRotationRoll = tagCompund.getFloat("RotationRoll");
-		System.out.println("Now setting axes!");
 		axes = new CustomRotationAxes(prevRotationYaw, prevRotationPitch, prevRotationRoll);
-		System.out.println("Succesfully set axes");
 
 		fuellevel = tagCompund.getDouble("Fuel");
-		initFile(Vehicles.get(filename), false);
 
 	}
 
@@ -145,6 +198,35 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 		tagCompund.setFloat("RotationPitch", rotationPitch);
 		tagCompund.setFloat("RotationRoll", rotationRoll);
 
+	}
+
+	// Called on client
+	@Override
+	public void writeSpawnData(ByteBuf data) {
+		ByteBufUtils.writeUTF8String(data, this.filename);
+		data.writeFloat(axes.getYaw());
+		data.writeFloat(axes.getPitch());
+		data.writeFloat(axes.getRoll());
+	}
+
+	// Called on client
+	@Override
+	public void readSpawnData(ByteBuf data) {
+		try {
+			filename = ByteBufUtils.readUTF8String(data);
+			initFile(getFile(), true);
+
+			axes.setAngles(data.readFloat(), data.readFloat(), data.readFloat());
+			prevRotationYaw = axes.getYaw();
+			prevRotationPitch = axes.getPitch();
+			prevRotationRoll = axes.getRoll();
+			// Warum nicht hier initFIle? Dann ist die rotation korrekt!
+
+		} catch (Exception e) {
+			RealLifeMod.log("Did not work!");
+			super.setDead();
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -160,7 +242,7 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
 		// Do nothing. Like a boss.
-		// TODO: perhaps send the player flying??
+		// : perhaps send the player flying??
 		// Sounds good. ^
 	}
 
@@ -172,23 +254,13 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		System.out.println("Checking for file");
 		VehicleFile file = getFile();
+
 		if (file == null) {
-			System.out.println("File is null, not ticking Entity");
 			return;
 		}
-		System.out.println("File is found");
-
-		System.out.println("Trying seat stugg");
 
 		if (!worldObj.isRemote) {
-			/*
-			 * for (int i = 0; i < getFile().numDrivers + 1; i++) { if (seats[i]
-			 * == null || !seats[i].addedToChunk) { seats[i] = new
-			 * EntitySeat(worldObj, this, i);
-			 * worldObj.spawnEntityInWorld(seats[i]); } }
-			 */
 
 			for (int i = 0; i < file.wheelPositions.length; i++) {
 				if (wheels[i] == null || !wheels[i].addedToChunk) {
@@ -198,26 +270,11 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 			}
 
 		}
-		System.out.println("prevRotation");
-		prevRotationYaw = rotationYaw;
-		prevRotationPitch = rotationPitch;
-		prevRotationRoll = rotationRoll;
 
-		for (EntityWheel wheel : wheels) {
-			if (wheel == null)
-				continue;
-
-			// Hacky way of forcing the car to step up blocks
-			onGround = true;
-			wheel.onGround = true;
-			wheel.rotationYaw = axes.getYaw();
-
-			wheel.motionX *= 0.9F;
-			wheel.motionY *= 0.9F;
-			wheel.motionZ *= 0.9F;
-
-			wheel.motionY -= 0.98F / 20F;
-		}
+		prevRotationYaw = axes.getYaw();
+		prevRotationPitch = axes.getPitch();
+		prevRotationRoll = axes.getRoll();
+		prevAxes = axes.clone();
 
 		if (riddenByEntity != null && riddenByEntity.isDead) {
 			riddenByEntity = null;
@@ -229,58 +286,71 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 		if (riddenByEntity != null)
 			riddenByEntity.fallDistance = 0F;
 
-		System.out.println("After prevRotation");
+		simulateValues();
 
-		// Festlegen des actualspeed;
-		applyForces();
-		// System.out.println("File is null cant apply forces!");
-		System.out.println("After Forces");
+		boolean playerIsDrivingThis = worldObj.isRemote && riddenByEntity != null&& riddenByEntity instanceof EntityPlayer && riddenByEntity == Minecraft.getMinecraft().thePlayer;// seats[0]
 
-		wheelsAngle += (Math.pow(throttle, 0.4)) * 0.2;
-		// acceleration
-		motorspeed += throttle;
-		actualspeed *= 0.9;
-		// Lenkeinschlag auf 0 laufen lassen und beschränken.
-		steeringAngle *= 0.9F;
-		if (steeringAngle < -35) {
-			steeringAngle = -35;
-		}
+		serverPosX = posX;
+		serverPosY = posY;
+		serverPosZ = posZ;
 
-		if (steeringAngle > 35) {
-			steeringAngle = 35;
-		}
-
-		checkInput();
-		System.out.println("After InputCheck");
-		
-		if (wheels.length > 0) {
-			// Calculate Vehicleangles from wheelpositions
-			if (wheels[0] != null && wheels[1] != null && wheels[2] != null && wheels[3] != null) {
-				Vector3f frontAxleCentre = MathUtils.vectorFromDouble((wheels[2].posX + wheels[3].posX) / 2F,
-						(wheels[2].posY + wheels[3].posY) / 2F, (wheels[2].posZ + wheels[3].posZ) / 2F);
-				Vector3f backAxleCentre = MathUtils.vectorFromDouble((wheels[0].posX + wheels[1].posX) / 2F,
-						(wheels[0].posY + wheels[1].posY) / 2F, (wheels[0].posZ + wheels[1].posZ) / 2F);
-
-				float dx = frontAxleCentre.x - backAxleCentre.x;
-				float dy = frontAxleCentre.y - backAxleCentre.y;
-				float dz = frontAxleCentre.z - backAxleCentre.z;
-
-				float dxz = (float) Math.sqrt(dx * dx + dz * dz);
-
-				float yaw = (float) Math.atan2(dz, dx);
-				float pitch = -(float) Math.atan2(dy, dxz);
-				float roll = 0;
-
-				/*
-				 * if (file.vehicleType == VehicleTypes.Tank) { yaw = (float)
-				 * Math.atan2(wheels[3].posZ - wheels[2].posZ, wheels[3].posX -
-				 * wheels[2].posX) + (float) Math.PI / 2F; }
-				 */
-
-				axes.setAngles(yaw * 180F / 3.14159F, pitch * 180F / 3.14159F, roll * 180F / 3.14159F);
+		if (playerIsDrivingThis) {
+			if (!isClient()) {
+				if (ticksSinceEntered > 0 && ticksSinceEntered < 5) {
+					ticksSinceEntered++;
+				}
+				if (ticksSinceEntered == 5)
+					ticksSinceEntered = 0;
 			}
-		} else
-			System.out.println("Missing wheels!");
+
+		} else {
+			if (isClient() && ticksSinceLeft > 0) {
+				ticksSinceLeft--;
+			}
+		}
+
+		if (loopingsoundposition > 0) {
+			loopingsoundposition--;
+		}
+
+		if (!worldObj.isRemote) {
+			playSounds();
+		}
+
+		if (!worldObj.isRemote && ticksExisted % 5 == 0) {
+			RealLifeMod.network.sendToAllAround(new UpdateControlPackage(this),
+					new TargetPoint(dimension, posX, posY, posZ, 10));
+		}
+
+	}
+
+	public void simulateValues() {
+	}
+
+	private void playSounds() {
+		VehicleFile file = getFile();
+		// Only playing enginesound if startsound and stopsound are not playing
+		if (ticksSinceEntered == 0 && ticksSinceLeft == 0 && loopingsoundposition == 0 && riddenByEntity != null) {
+			loopingsoundposition = runsound.length;
+			worldObj.playSoundAtEntity(this, "reallifemod:" + runsound.getSoundLocation().getResourcePath(), 1, 1f);
+		}
+
+		if (throttle > 0) {
+			if (loopingsoundposition == 0) {
+				loopingsoundposition = throttlesound.length;
+				worldObj.playSoundAtEntity(this, "reallifemod:" + throttlesound.getSoundLocation().getResourcePath(), 1,
+						1);
+
+				// PacketPlaySound.sendSoundPacket((float) posX, (float) posY,
+				// (float) posZ, 10f, worldObj.provider.getDimensionId(),
+				// throttlesound.getSoundLocation().getResourcePath(), 1f);
+			}
+		}
+
+		if (ticksSinceEntered == 1) {
+			if (startsound != null && loopingsoundposition == 0) {
+			}
+		}
 
 	}
 
@@ -290,47 +360,38 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 		rotationRoll = h;
 	}
 
-	public void checkInput() {
-		if (isClient()) {
+	@Override
+	public boolean interactFirst(EntityPlayer playerIn) {
+		if (worldObj == null)
+			return false;
+		if (!worldObj.isRemote) {
+			worldObj.playSoundAtEntity(this, "reallifemod:" + startsound.getSoundLocation().getResourcePath(), 1,
+					(float) this.actualspeed * 100);
 
-			if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-				System.out.println("Pressed 'W'!");
-				throttle += 0.025f;
-			} else {
-				throttle = 0;
-
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-				if (actualspeed > 0.0001)
-					actualspeed *= 0.8;
-				else
-					actualspeed = 0;
-			}
-
-			if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-				if (!Keyboard.isKeyDown(Keyboard.KEY_D))
-					if (steeringAngle < 35)
-						steeringAngle += 2.5;
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-				if (steeringAngle > -35)
-					steeringAngle -= 2.5;
-			}
-
-			// if (Keyboard.isKeyDown(i)) {
-			// RealLifeMod.network.sendToServer(new
-			// OpenContainerPackage(VehicleGui.ID, this));
-			// }
-
-			// if (Keyboard.isKeyDown(Keybindings.Horn.getKeyCode())) {
-			// RealLifeMod.network.sendToServer(new
-			// OpenContainerPackage(VehicleGui.ID, this));
-			// }
+		} else {
+			// Minecraft.getMinecraft().getSoundHandler().playSound(CustomSound.getSoundWithPosition(getFile().startsound.getSoundLocation().getResourcePath(),
+			// (float)posX, (float)posY, (float)posZ, 1, 1));
 		}
+		playerIn.rotationYaw = this.rotationYaw;
+		playerIn.rotationYawHead = this.rotationYaw;
 
+		playerIn.mountEntity(this);
+
+		/** Setting ticksSinceEntered to 1 so onUpdate starts counting */
+		ticksSinceEntered = startsound.length / 2 - 20;
+
+		return true;
 	}
 
-	private boolean isClient() {
+	@Override
+	public void updateRiderPosition() {
+		EntityPlayer p = (EntityPlayer) riddenByEntity;
+		Vector3f riderPosition = axes.findLocalVectorGlobally(getFile().seatPositions[0]);
+		p.setAir(1);
+		p.setPosition(posX + riderPosition.x, posY + riderPosition.y, posZ + riderPosition.z);
+	}
+
+	protected boolean isClient() {
 		return !this.worldObj.isRemote;
 	}
 
@@ -338,55 +399,7 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 		return Vehicles.get(filename);
 	}
 
-	public void applyForces() {
-		actualspeed = motorspeed;
-		actualspeed -= ((airDrag() + rollDrag() + accelerationDrag() + pitchDrag()) / 1000 / 60 / 20);
-
-	}
-
-	private double airDrag() {
-		VehicleFile file = getFile();
-
-		double cw = getCW();// Stroemungswiderstandskoeffizient
-		double relativeSpeed = (float) Math.sqrt((motionX * motionX) + (motionZ * motionZ));
-		double A = file.width * file.height;// Flaecheninhalt
-		double airdrag = (1.2f / 2) * cw * A * relativeSpeed;
-		return airdrag;
-	}
-
-	private double rollDrag() {
-		float rdc = getRollDragCoefficient();
-		float rollForce = (float) (getFullMass() * Physics.g * rdc);
-		return rollForce;
-	}
-
-	private double pitchDrag() {
-		return (getFullMass() * Physics.g * Math.sin(rotationPitch));
-	}
-
-	private double accelerationDrag() {
-		double momentOfInertia = (4 * (wheels[0].mass)) * motorspeed;
-		return (momentOfInertia * getFullMass()) * throttle;
-	}
-
-	private double getFullMass() {
-		int playerCount = 0;
-		/*
-		 * for (EntitySeat seat : seats) { if (seat.riddenByEntity != null &&
-		 * seat.riddenByEntity instanceof EntityPlayer) { playerCount++; } }
-		 */
-		return getFile().mass + (playerCount * 75);
-	}
-
-	private double getCW() {
-		return 0.2;
-	}
-
-	private float getRollDragCoefficient() {
-		return Physics.getRollDragCoefficientForBlock(findBlockUnderVehicle());
-	}
-
-	private Block findBlockUnderVehicle() {
+	protected Block findBlockUnderVehicle() {
 		if (worldObj != null)
 			return worldObj.getBlockState(getPosition().subtract(new Vec3i(0, 1, 0))).getBlock();
 		else
@@ -424,6 +437,7 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 			prevRotationRoll += 360F;
 		if (dRoll < -180)
 			prevRotationRoll -= 360F;
+		axes.setAngles(rotationYaw, rotationPitch, rotationRoll);
 	}
 
 	@Override
@@ -434,9 +448,6 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public void setDead() {
 		super.setDead();
-		for (EntityWheel wheel : wheels)
-			if (wheel != null)
-				wheel.setDead();
 	}
 
 	public Vector3f rotate(Vector3f inVec) {
@@ -457,6 +468,69 @@ public class EntityDriveable extends Entity implements IEntityAdditionalSpawnDat
 	 */
 	public Vector3f rotate(double x, double y, double z) {
 		return rotate(new Vector3f((float) x, (float) y, (float) z));
+	}
+
+	@Override
+	public void onMouseMoved(int deltaX, int deltaY) {
+	}
+
+	@Override
+	public boolean pressKey(int key, EntityPlayer player) {
+		VehicleFile file = getFile();
+		if (worldObj.isRemote && (key == Keyboard.KEY_W || key == 5)) {
+			// SendKeyPacketToServer
+			/**
+			 * If player dismounts, set tickssinceleft to 1 for the stopping
+			 * sound
+			 */
+			if (key == 6) {
+				loopingsoundposition = 5;
+				if (riddenByEntity == null && loopingsoundposition == 5) {
+					if (stopsound != null && loopingsoundposition == 0) {
+						worldObj.playSoundAtEntity(this,
+								"reallifemod:" + startsound.getSoundLocation().getResourcePath(), 1, 1);
+					}
+				}
+			}
+
+			RealLifeMod.network.sendToServer(new ControlableInputPacket());
+		}
+		return false;
+	}
+
+	@Override
+	public void updateKeyHeldState(int key, boolean held) {
+		if (worldObj.isRemote) {
+			RealLifeMod.network.sendToServer(new PacketDriveableKeyHeld(key, held));
+		}
+		switch (key) {
+		case 9:
+			leftMouseHeld = held;
+			break;
+		case 8:
+			rightMouseHeld = held;
+			break;
+		}
+	}
+
+	@Override
+	public Entity getControllingEntity() {
+		return riddenByEntity;
+	}
+
+	@Override
+	public boolean isDead() {
+		return isDead;
+	}
+
+	@Override
+	public float getPlayerRoll() {
+		return axes.getRoll();
+	}
+
+	@Override
+	public float getPrevPlayerRoll() {
+		return prevAxes.getRoll();
 	}
 
 }

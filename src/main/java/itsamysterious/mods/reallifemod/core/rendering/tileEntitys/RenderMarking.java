@@ -2,9 +2,9 @@ package itsamysterious.mods.reallifemod.core.rendering.tileEntitys;
 
 import org.lwjgl.opengl.GL11;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.core.blocks.BlockIronFence;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.core.blocks.Block_IronFence;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_IronFence;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -32,17 +32,17 @@ public class RenderMarking extends TileEntitySpecialRenderer {
 			Block front = tile.getWorld().getBlockState(tile.getPos().add(new Vec3i(0,0,1))).getBlock();
 			Block back = tile.getWorld().getBlockState(tile.getPos().add(new Vec3i(0,0,-1))).getBlock();
 			
-			if(front instanceof BlockIronFence||!(front instanceof BlockAir)){
+			if(front instanceof Block_IronFence||!(front instanceof BlockAir)){
 				bindTexture(new ResourceLocation("reallifemod:textures/models/block/texture_Iron.png"));
 			}
-			if(back instanceof BlockIronFence||!(back instanceof BlockAir)){
+			if(back instanceof Block_IronFence||!(back instanceof BlockAir)){
 				model.renderPart("back");
 			}
 			
-			if(left instanceof BlockIronFence||!(left instanceof BlockAir)){
+			if(left instanceof Block_IronFence||!(left instanceof BlockAir)){
 				model.renderPart("left");
 			}
-			if(right instanceof BlockIronFence||!(right instanceof BlockAir)){
+			if(right instanceof Block_IronFence||!(right instanceof BlockAir)){
 				model.renderPart("right");
 			}
 			model.renderPart("post");

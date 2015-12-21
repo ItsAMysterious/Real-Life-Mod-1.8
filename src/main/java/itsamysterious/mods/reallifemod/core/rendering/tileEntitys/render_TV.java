@@ -9,9 +9,9 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.core.blocks.furniture.BlockTVTable;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.core.blocks.furniture.Block_TVTable;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TV;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -34,7 +34,7 @@ public class render_TV extends TileEntitySpecialRenderer {
 		glEnable(GL_ALPHA_TEST);
 		Block b = tile.getWorld().getBlockState(tile.getPos().subtract(new Vec3i(0, 1, 0))).getBlock();
 		glTranslatef((float) x + 0.5f, (float) y, (float) z + 0.5f);
-		if (b instanceof BlockTVTable) {
+		if (b instanceof Block_TVTable) {
 			glTranslatef(0, -0.5f, 0);
 		}
 		glRotatef(tile.rotation * 90, 0.0F, 1.0F, 0.0F);

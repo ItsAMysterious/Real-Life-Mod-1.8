@@ -2,8 +2,8 @@ package itsamysterious.mods.reallifemod.core.rendering.tileEntitys;
 
 import org.lwjgl.opengl.GL11;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DrinksFridge;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

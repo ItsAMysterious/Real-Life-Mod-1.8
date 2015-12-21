@@ -18,8 +18,8 @@ import org.lwjgl.util.vector.Vector2f;
 
 import itsamysterious.mods.reallifemod.RealLifeMod;
 import itsamysterious.mods.reallifemod.Screenshotspack;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

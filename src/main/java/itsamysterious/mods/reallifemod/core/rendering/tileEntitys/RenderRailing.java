@@ -2,10 +2,10 @@ package itsamysterious.mods.reallifemod.core.rendering.tileEntitys;
 
 import org.lwjgl.opengl.GL11;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.core.blocks.BlockIronFence;
-import itsamysterious.mods.reallifemod.core.blocks.BlockRailing;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.core.blocks.Block_IronFence;
+import itsamysterious.mods.reallifemod.core.blocks.Block_Railing;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_IronFence;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Railing;
 import net.minecraft.block.Block;
@@ -36,10 +36,10 @@ public class RenderRailing extends TileEntitySpecialRenderer {
 			Block front = tile.getWorld().getBlockState(tile.getPos().add(new Vec3i(0,0,1))).getBlock();
 			Block back = tile.getWorld().getBlockState(tile.getPos().add(new Vec3i(0,0,-1))).getBlock();
 			
-			if(!(left instanceof BlockAir)&&!(left instanceof BlockRailing)){
+			if(!(left instanceof BlockAir)&&!(left instanceof Block_Railing)){
 				model.renderPart("left");
 			}else
-			if(!(right instanceof BlockAir)&&!(right instanceof BlockRailing)){
+			if(!(right instanceof BlockAir)&&!(right instanceof Block_Railing)){
 				model.renderPart("right");
 			}else
 			model.renderPart("middle");

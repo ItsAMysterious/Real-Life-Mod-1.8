@@ -1,20 +1,15 @@
 package itsamysterious.mods.reallifemod.client;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import itsamysterious.mods.reallifemod.Screenshotspack;
 import itsamysterious.mods.reallifemod.common.CommonProxy;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Blocks;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Items;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Ramp;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Shelf;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TVTable;
-import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Computer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DartBoard;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DigitalFrame;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Drawer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DrinksFridge;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_IronFence;
@@ -22,14 +17,18 @@ import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Lantern;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Pinwheel;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_PowerLine;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Railing;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Ramp;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Shelf;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Sign;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TV;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TVTable;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Toilet;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Transformer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_VendingMachine;
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
+import itsamysterious.mods.reallifemod.core.eventhandlers.KeyHandler;
 import itsamysterious.mods.reallifemod.core.gui.lifesystem.RLMOverlay;
-import itsamysterious.mods.reallifemod.core.handlers.Keybindings;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderPylon;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderVehicle;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderWheel;
@@ -58,7 +57,6 @@ import itsamysterious.mods.reallifemod.core.roads.signs.RenderSign;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasPump;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasTank;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
-import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityWheel;
 import itsamysterious.mods.reallifemod.init.Reference;
 import net.minecraft.block.Block;
@@ -75,6 +73,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -84,11 +83,9 @@ public class ClientProxy extends CommonProxy {
 
 	private Minecraft mc;
 	private int ModEntityID;
-	private Keybindings keybindings = new Keybindings();
 
 	public ClientProxy() {
 		loadCoreModules();
-		keybindings.init();
 	}
 
 	@Override
@@ -120,6 +117,8 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityWheel.class, new RenderWheel());
 
 		MinecraftForge.EVENT_BUS.register(new RLMOverlay(Minecraft.getMinecraft()));
+		MinecraftForge.EVENT_BUS.register(new KeyHandler());
+
 	}
 
 	public void registerTiles() {
@@ -181,6 +180,12 @@ public class ClientProxy extends CommonProxy {
 	public void blockHighlightEvent(DrawBlockHighlightEvent e) {
 		if (e.target.entityHit instanceof EntityPlayer) {
 		}
+	}
+	
+	@Override
+	public boolean isThePlayer(EntityPlayer player) {
+		return player == FMLClientHandler.instance().getClient().thePlayer;
+
 	}
 
 }

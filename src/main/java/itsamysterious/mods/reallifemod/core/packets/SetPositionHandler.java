@@ -2,6 +2,7 @@ package itsamysterious.mods.reallifemod.core.packets;
 
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Electric;
 import itsamysterious.mods.reallifemod.core.gui.lifesystem.RLMOverlay;
+import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.IThreadListener;
@@ -17,7 +18,7 @@ public class SetPositionHandler implements IMessageHandler<UpdateVehiclePacket, 
 		final IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj;
 		mainThread.addScheduledTask(new Runnable() {
 			World world = ctx.getServerHandler().playerEntity.worldObj;
-			EntityVehicle v = (EntityVehicle) world.getEntityByID(message.id);
+			EntityDriveable v = (EntityDriveable) world.getEntityByID(message.id);
 
 			@Override
 			public void run() {

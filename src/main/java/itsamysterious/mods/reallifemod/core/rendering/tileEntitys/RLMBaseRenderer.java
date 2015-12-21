@@ -1,8 +1,8 @@
 package itsamysterious.mods.reallifemod.core.rendering.tileEntitys;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.config.RealLifeModConfig;
+import itsamysterious.mods.reallifemod.RealLifeModConfig;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
 import itsamysterious.mods.reallifemod.init.Reference;
 
 import javax.vecmath.Vector3d;

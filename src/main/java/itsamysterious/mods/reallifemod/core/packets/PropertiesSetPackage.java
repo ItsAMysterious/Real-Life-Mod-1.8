@@ -16,7 +16,7 @@ public class PropertiesSetPackage implements IMessage{
 	public PropertiesSetPackage(RLMPlayerProps props){
 		this.name=props.getName();
 		this.surname=props.getSurname();
-		this.gender=props.getGender();
+		this.gender=props.gender.toString();
 	}
 
 

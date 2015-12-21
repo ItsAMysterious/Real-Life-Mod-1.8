@@ -7,64 +7,70 @@ import org.lwjgl.util.vector.Vector3f;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityWheel extends Entity implements IEntityAdditionalSpawnData {
-	public int ID;
 	public EntityDriveable parent;
-	public float rotationRoll;
-	private int vehicleID;
+	public int ID;
+
 	@SideOnly(Side.CLIENT)
-	private boolean foundVehicle;
-	public double mass = 10;
+	public boolean foundVehicle;
+
+	private int vehicleID;
 
 	public EntityWheel(World worldIn) {
 		super(worldIn);
-		setSize(1, 1);
+		setSize(1F, 1F);
+		stepHeight = 1.0F;
 	}
 
-	public EntityWheel(World worldIn, EntityDriveable entityVehicle, int id) {
+	public EntityWheel(World worldIn, EntityDriveable e, int id) {
 		this(worldIn);
-		parent = entityVehicle;
-		vehicleID = entityVehicle.getEntityId();
+		parent = e;
+		vehicleID = e.getEntityId();
 		ID = id;
-		stepHeight = 1;
+
 		initPosition();
+	}
+
+	public void initPosition() {
+		Vector3f wheelVector = parent.axes.findLocalVectorGlobally(parent.getFile().wheelPositions[ID]);
+		System.out.println("Wheelvector from wheel number " + ID + "= " + wheelVector.toString());
+		setPosition(parent.posX + wheelVector.x, parent.posY + wheelVector.y, parent.posZ + wheelVector.z);
+		stepHeight = 1F;
+
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
+	}
+
+	@Override
+	public void fall(float k, float l) {
+		if (parent == null || k <= 0)
+			return;
+		int i = MathHelper.ceiling_float_int(k - 3F);
+		if (i > 0) {
+		}
+		// parent.attackPart(parent.getFile().wheelPositions[ID],
+		// DamageSource.fall, i);
 	}
 
 	@Override
 	protected void entityInit() {
 	}
 
-	private void initPosition() {
-		System.out.println("Initialiizing Position:");
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound tags) {
+		setDead();
+	}
 
-		VehicleFile file = parent.getFile();
-		if (file == null) {
-			return;
-		}
-		Vector3f pos = parent.getPositionVectorFloat();
-		if (file.wheelPositions != null && ID <= file.wheelPositions.length) {
-			Vector3f wantedPos = new Vector3f(0, 0, 0);
-
-			if (parent.axes != null) {
-				wantedPos = parent.axes.findLocalVectorGlobally(file.wheelPositions[ID]);
-			}else
-			{
-				System.out.println("Axes are null!");
-			}
-			setPosition(pos.x + wantedPos.x, pos.y + wantedPos.y, pos.z + wantedPos.z);
-
-		} else {
-			System.out.println("Too large!");
-
-		}
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound tags) {
 	}
 
 	@Override
@@ -82,33 +88,7 @@ public class EntityWheel extends Entity implements IEntityAdditionalSpawnData {
 
 		if (!addedToChunk)
 			worldObj.spawnEntityInWorld(this);
-		if (parent.getFile() != null && parent.getFile().wheelPositions != null) {
 
-		}
-
-		rotationPitch = parent.wheelsAngle;
-
-		moveEntity(motionX, motionY, motionZ);
-
-		if (!onGround) {
-			this.motionY *= 0.9800000190734863D;
-
-		} else {
-			motionX *= 0.9;
-			this.motionY *= -0.5D;
-			motionZ *= 0.9;
-
-		}
-
-	}
-
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound tagCompund) {
-		setDead();
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound tagCompound) {
 	}
 
 	@Override
@@ -133,6 +113,16 @@ public class EntityWheel extends Entity implements IEntityAdditionalSpawnData {
 
 	public double getSpeedXZ() {
 		return Math.sqrt(motionX + motionX * motionZ * motionZ);
+	}
+
+	@Override
+	public void func_180426_a(double d, double d1, double d2, float f, float f1, int i, boolean b) {
+	}
+
+	public void setPrevPos(double x, double y, double z) {
+		prevPosX = x;
+		prevPosY = y;
+		prevPosZ = z;
 	}
 
 }

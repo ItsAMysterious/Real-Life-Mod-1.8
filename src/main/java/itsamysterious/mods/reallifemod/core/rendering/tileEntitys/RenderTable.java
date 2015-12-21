@@ -2,9 +2,9 @@ package itsamysterious.mods.reallifemod.core.rendering.tileEntitys;
 
 import org.lwjgl.opengl.GL11;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.core.blocks.furniture.BlockTable;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.core.blocks.furniture.Block_Table;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -37,45 +37,45 @@ public class RenderTable extends TileEntitySpecialRenderer {
 			Block front = tile.getWorld().getBlockState(tile.getPos().add(new Vec3i(0, 0, 1))).getBlock();
 			Block back = tile.getWorld().getBlockState(tile.getPos().add(new Vec3i(0, 0, -1))).getBlock();
 
-			if (!(left instanceof BlockTable)) {
-				if (!(front instanceof BlockTable)) {
+			if (!(left instanceof Block_Table)) {
+				if (!(front instanceof Block_Table)) {
 					model.renderPart("left");
 				}
 
-				if (!(back instanceof BlockTable)) {
+				if (!(back instanceof Block_Table)) {
 					model.renderPart("backleft");
 				}
 			}
 
-			if (!(right instanceof BlockTable)) {
-				if (!(front instanceof BlockTable)) {
+			if (!(right instanceof Block_Table)) {
+				if (!(front instanceof Block_Table)) {
 					model.renderPart("right");
 				}
 
-				if (!(back instanceof BlockTable)) {
+				if (!(back instanceof Block_Table)) {
 					model.renderPart("backright");
 				}
 			}
 
-			if (!(front instanceof BlockTable)) {
-				if (!(left instanceof BlockTable)) {
+			if (!(front instanceof Block_Table)) {
+				if (!(left instanceof Block_Table)) {
 					model.renderPart("left");
 
 				}
-				if (!(right instanceof BlockTable)) {
+				if (!(right instanceof Block_Table)) {
 					model.renderPart("right");
 
 				}
 
 			}
 
-			if (!(back instanceof BlockTable)) {
+			if (!(back instanceof Block_Table)) {
 
-				if (!(left instanceof BlockTable)) {
+				if (!(left instanceof Block_Table)) {
 					model.renderPart("backleft");
 
 				}
-				if (!(right instanceof BlockTable)) {
+				if (!(right instanceof Block_Table)) {
 					model.renderPart("backright");
 
 				}

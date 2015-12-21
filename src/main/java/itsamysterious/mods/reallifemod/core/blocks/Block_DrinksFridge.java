@@ -1,5 +1,6 @@
 package itsamysterious.mods.reallifemod.core.blocks;
 
+import itsamysterious.mods.reallifemod.core.RLMFurnitureBlock;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_DrinksFridge;
 import itsamysterious.mods.reallifemod.core.tiles.RLMTileEntity;
 

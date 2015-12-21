@@ -4,9 +4,10 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
-import itsamysterious.mods.reallifemod.config.RealLifeModConfig;
+
+import itsamysterious.mods.reallifemod.RealLifeModConfig;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Computer;
 import itsamysterious.mods.reallifemod.core.models.ModelComputer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

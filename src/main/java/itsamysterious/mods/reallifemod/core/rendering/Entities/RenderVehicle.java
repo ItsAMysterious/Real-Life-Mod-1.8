@@ -6,7 +6,7 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
 import itsamysterious.mods.reallifemod.core.vehicles.VehicleFile;
 import net.minecraft.client.Minecraft;

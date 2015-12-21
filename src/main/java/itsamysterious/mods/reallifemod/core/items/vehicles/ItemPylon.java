@@ -1,7 +1,7 @@
 package itsamysterious.mods.reallifemod.core.items.vehicles;
 
+import itsamysterious.mods.reallifemod.core.RLMExtItem;
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
-import itsamysterious.mods.reallifemod.utils.RLMExtItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;

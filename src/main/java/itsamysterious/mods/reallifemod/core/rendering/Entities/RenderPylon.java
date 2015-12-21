@@ -2,8 +2,8 @@ package itsamysterious.mods.reallifemod.core.rendering.Entities;
 
 import org.lwjgl.opengl.GL11;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;

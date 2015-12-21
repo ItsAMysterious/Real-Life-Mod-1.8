@@ -84,9 +84,9 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
 			this.motionY *= 0.9800000190734863D;
 
 		} else {
-			motionX*=0.9;
+			motionX *= 0.9;
 			this.motionY *= -0.5D;
-			motionZ*=0.9;
+			motionZ *= 0.9;
 
 		}
 
@@ -123,7 +123,12 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	public double getSpeedXZ() {
-		return Math.sqrt(motionX+motionX*motionZ*motionZ);
+		return Math.sqrt(motionX + motionX * motionZ * motionZ);
+	}
+
+	public void updatePosition() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -5,7 +5,6 @@ import java.io.File;
 import itsamysterious.mods.reallifemod.client.ClientProxy;
 import itsamysterious.mods.reallifemod.common.CommonProxy;
 import itsamysterious.mods.reallifemod.common.ServerTickHandler;
-import itsamysterious.mods.reallifemod.config.RealLifeModConfig;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Blocks;
 import itsamysterious.mods.reallifemod.core.RealLifeMod_Items;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Chair;
@@ -29,32 +28,43 @@ import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Toilet;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Transformer;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_VendingMachine;
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
+import itsamysterious.mods.reallifemod.core.eventhandlers.ClientHandler;
+import itsamysterious.mods.reallifemod.core.eventhandlers.CommonHandler;
+import itsamysterious.mods.reallifemod.core.eventhandlers.GuiHandler;
+import itsamysterious.mods.reallifemod.core.eventhandlers.WorldGenCopper;
 import itsamysterious.mods.reallifemod.core.gui.phone.PhoneRegistry;
 import itsamysterious.mods.reallifemod.core.gui.phone.apps.Browser;
 import itsamysterious.mods.reallifemod.core.gui.phone.apps.Phone;
-import itsamysterious.mods.reallifemod.core.handlers.ClientHandler;
-import itsamysterious.mods.reallifemod.core.handlers.CommonHandler;
-import itsamysterious.mods.reallifemod.core.handlers.GuiHandler;
-import itsamysterious.mods.reallifemod.core.handlers.WorldGenCopper;
+import itsamysterious.mods.reallifemod.core.packets.ControlableInputPacket;
+import itsamysterious.mods.reallifemod.core.packets.ControllableInputHandler;
 import itsamysterious.mods.reallifemod.core.packets.CustomCollisionHandler;
 import itsamysterious.mods.reallifemod.core.packets.CustomCollisionPacket;
+import itsamysterious.mods.reallifemod.core.packets.KeyHeldHandler;
 import itsamysterious.mods.reallifemod.core.packets.MountHandler;
 import itsamysterious.mods.reallifemod.core.packets.MountVehicleMessage;
-import itsamysterious.mods.reallifemod.core.packets.PacketHandler;
+import itsamysterious.mods.reallifemod.core.packets.PacketDriveableKeyHeld;
 import itsamysterious.mods.reallifemod.core.packets.PacketHandlerPropsSet;
+import itsamysterious.mods.reallifemod.core.packets.PacketPlaySound;
+import itsamysterious.mods.reallifemod.core.packets.PlaySoundHandler;
 import itsamysterious.mods.reallifemod.core.packets.PropertiesSetPackage;
 import itsamysterious.mods.reallifemod.core.packets.SetPositionHandler;
+import itsamysterious.mods.reallifemod.core.packets.SetPropertiesHandler;
 import itsamysterious.mods.reallifemod.core.packets.SetPropertiesPackage;
+import itsamysterious.mods.reallifemod.core.packets.UpdateControlHandler;
+import itsamysterious.mods.reallifemod.core.packets.UpdateControlPackage;
 import itsamysterious.mods.reallifemod.core.packets.UpdateVehiclePacket;
 import itsamysterious.mods.reallifemod.core.roads.signs.Signs;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasPump;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasTank;
+import itsamysterious.mods.reallifemod.core.utils.CustomCreativeTab;
+import itsamysterious.mods.reallifemod.core.utils.Physics;
+import itsamysterious.mods.reallifemod.core.vehicles.EntityCar;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
+import itsamysterious.mods.reallifemod.core.vehicles.EntitySeat;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityWheel;
 import itsamysterious.mods.reallifemod.core.vehicles.VehicleFile;
 import itsamysterious.mods.reallifemod.core.vehicles.Vehicles;
 import itsamysterious.mods.reallifemod.init.Reference;
-import itsamysterious.mods.reallifemod.utils.CustomCreativeTab;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -81,6 +91,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.tools.nsc.backend.icode.GenICode.PJUMP;
 
 @Mod(modid = Reference.ID, version = Reference.VERSION, name = Reference.NAME, guiFactory = "itsamysterious.mods.reallifemod.init.GuiFactory")
 public class RealLifeMod {
@@ -88,7 +99,7 @@ public class RealLifeMod {
 	private File vehiclefile;
 	private File signfile;
 
-	@Instance
+	@Mod.Instance
 	public static RealLifeMod instance;
 
 	@SidedProxy(clientSide = "itsamysterious.mods.reallifemod.client.ClientProxy", serverSide = "itsamysterious.mods.reallifemod.common.CommonProxy")
@@ -131,14 +142,17 @@ public class RealLifeMod {
 	public void preInit(FMLPreInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(proxy);
 		FMLCommonHandler.instance().bus().register(instance);
-		FMLCommonHandler.instance().bus().register(new CommonHandler());
-		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
 		FMLCommonHandler.instance().bus().register(new ClientProxy());
+		
+		NetworkRegistry.INSTANCE.registerGuiHandler(RealLifeMod.instance, new GuiHandler());
+		
+		FMLCommonHandler.instance().bus().register(new CommonHandler());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
-		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new GuiHandler());
+		
 		RealLifeMod_Blocks.defineBlocks();
 		RealLifeMod_Items.defineItems();
 
+		Physics.init();
 		this.vehiclefile = new File(MinecraftServer.getServer().getDataDirectory() + "/RLM/vehicles/");
 		this.signfile = new File(MinecraftServer.getServer().getDataDirectory() + "/RLM/signs/");
 		registerEntities();
@@ -151,11 +165,15 @@ public class RealLifeMod {
 		RealLifeModConfig.syncConfig();
 
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.ID);
-		network.registerMessage(PacketHandler.class, SetPropertiesPackage.class, 0, Side.SERVER);
+		network.registerMessage(SetPropertiesHandler.class, SetPropertiesPackage.class, 0, Side.SERVER);
 		network.registerMessage(PacketHandlerPropsSet.class, PropertiesSetPackage.class, 1, Side.CLIENT);
 		network.registerMessage(MountHandler.class, MountVehicleMessage.class, 2, Side.SERVER);
 		network.registerMessage(SetPositionHandler.class, UpdateVehiclePacket.class, 3, Side.SERVER);
 		network.registerMessage(CustomCollisionHandler.class, CustomCollisionPacket.class, 4, Side.SERVER);
+		network.registerMessage(UpdateControlHandler.class, UpdateControlPackage.class, 5, Side.SERVER);
+		network.registerMessage(ControllableInputHandler.class, ControlableInputPacket.class, 6, Side.SERVER);
+		network.registerMessage(KeyHeldHandler.class, PacketDriveableKeyHeld.class, 7, Side.SERVER);
+		network.registerMessage(PlaySoundHandler.class, PacketPlaySound.class, 8, Side.CLIENT);
 
 		setupTileEntities();
 		GameRegistry.registerWorldGenerator(new WorldGenCopper(), 8);
@@ -199,19 +217,23 @@ public class RealLifeMod {
 	}
 
 	public void registerEntities() {
+		log("Registering Entities");
 		ModEntityID = EntityRegistry.findGlobalUniqueEntityId();
-		EntityRegistry.registerModEntity(EntityDriveable.class, "CarEntity", ModEntityID++, RealLifeMod.instance, 256, 1, true);
+		EntityRegistry.registerModEntity(EntityDriveable.class, "DriveableEntity", ModEntityID++, RealLifeMod.instance,
+				256, 1, true);
+		EntityRegistry.registerModEntity(EntityCar.class, "CarEntity", ModEntityID++, RealLifeMod.instance, 256, 1,
+				true);
 		EntityRegistry.registerModEntity(EntityPylon.class, "EntityPylon", ModEntityID++, RealLifeMod.instance, 80, 1,
 				true);
 		EntityRegistry.registerModEntity(EntityWheel.class, "EntityWheel", ModEntityID++, RealLifeMod.instance, 80, 1,
 				true);
-		EntityRegistry.registerModEntity(EntityWheel.class, "EntitySeat", ModEntityID++, RealLifeMod.instance, 80, 1,
+		EntityRegistry.registerModEntity(EntitySeat.class, "EntitySeat", ModEntityID++, RealLifeMod.instance, 80, 1,
 				true);
 
 	}
 
 	private void loadVehicles() {
-		System.out.println("loaded vehicles");
+		log("loaded vehicles");
 		if (vehiclefile.exists()) {
 			if (vehiclefile.isDirectory()) {
 				for (File vehicle : vehiclefile.listFiles()) {
@@ -292,6 +314,10 @@ public class RealLifeMod {
 
 	public static int findUnusedGuiID() {
 		return GUIIDs[GUIIDs.length] + 1;
+	}
+
+	public static void log(String string) {
+		System.out.println("[Real Life Mod] " + string);
 	}
 
 }

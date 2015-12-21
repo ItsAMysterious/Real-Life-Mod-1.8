@@ -9,8 +9,8 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.AdvancedModelLoader;
-import itsamysterious.mods.reallifemod.client.forgeobjmodelported.IModelCustom;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.AdvancedModelLoader;
+import itsamysterious.mods.reallifemod.api.forgeobjmodelported.IModelCustom;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Electric;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_PowerLine;
 import itsamysterious.mods.reallifemod.core.utils.MathUtils;
