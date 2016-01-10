@@ -3,7 +3,6 @@
     "textures": {
         "layer0": "reallifemod:items/itemControlDevice"
     },
-    #inventory
     "display": {
         "thirdperson": {
             "rotation": [ -90, 0, 0 ],

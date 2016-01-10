@@ -1,0 +1,17 @@
+Trader:
+As a trader you will be able to sell your resources to other players.
+Use the RLM-Menu (Press 'L' to bring it up) and navigate to the 'My Job'-Tab.
+In there you will find everything you need. You can advertise your shop with a 
+public Servermessage, but it costs some of your hard earned money!
+
+Doctor:
+The doctor is one of the most important - yet difficult jobs to find.
+To perform this job you will have to pass an examn which will teach you
+how to create medicin out of herbs and how to use it - how to let broken bones
+grow back together and how to reanimate a dead player. Once u have passed
+the examn you can build up your own hospital. To start with the lessons
+navigate to the 'My Job'-Tab
+
+Arzt:
+Der Beruf des Artztes is einer der wichtigsten und doch einer der schwersten 
+Berufe die du dir aussuchen kannst

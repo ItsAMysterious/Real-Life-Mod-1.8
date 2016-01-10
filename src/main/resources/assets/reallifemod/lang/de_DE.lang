@@ -1,0 +1,14 @@
+ had no school//----------------Items-------------
+item.circuitboard.name=Circuitboard
+item.scrabbedmetal.name=Scrabed Metal
+item.itemSalt.name=Salt
+
+//----------------Blocks------------
+tile.RLMTelevision.name=Television
+tile.RLMDrawer.name=Drawer
+tile.blockparquet.name=Parquet
+tile.blocktarmac.name=Tarmac
+tile.RLMToilet.name=Toilet
+//---------------Entities----------
+
+

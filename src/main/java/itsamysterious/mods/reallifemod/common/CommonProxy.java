@@ -22,7 +22,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 public class CommonProxy {
 	public void registerTiles() {
@@ -44,8 +46,8 @@ public class CommonProxy {
 	public void loadCoreModules() {
 	}
 
-	public boolean isThePlayer(EntityPlayer riddenByEntity) {
-		return false;
+	public boolean isThePlayer(EntityPlayer player) {
+		return player == FMLServerHandler.instance().getServer().getCommandSenderEntity();
 	}
 
 }

@@ -26,7 +26,7 @@ public class ScreenTab extends Gui {
 	public ScreenTab(int i, String text) {
 		id = i;
 		tabText = text;
-		isSelected=false;
+		isSelected = false;
 	}
 
 	public void updateTab() {
@@ -34,13 +34,16 @@ public class ScreenTab extends Gui {
 	}
 
 	public void initTab() {
-		
+
 	}
 
 	private void onMouseClicked(int mouseX, int mouseY, int mouseID) {
 		if (isSelected) {
 			for (GuiButton b : buttonList) {
-				b.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY);
+				if (b.isMouseOver()&&b.enabled) {
+					b.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY);
+					actionPerformed(b);
+				}
 			}
 		}
 
@@ -58,16 +61,19 @@ public class ScreenTab extends Gui {
 			for (GuiButton b : buttonList) {
 				b.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
 			}
-			RealLifeMod.log(id+(isSelected?"Is selected":"Is not selected!"));
 			GL11.glColor3f(1, 1, 1);
 		} else {
 			// Draw the unselected tab at the propper position
 			int position = tabwidth * id;
 		}
-		
-		drawCenteredString(mc.fontRendererObj, tabText, left + id*40+20, res.getScaledHeight()/2-95,
+
+		drawCenteredString(mc.fontRendererObj, tabText, left + id * 40 + 20, res.getScaledHeight() / 2 - 95,
 				Color.white.getRGB());
 		GL11.glColor3f(1, 1, 1);
+
+	}
+
+	public void actionPerformed(GuiButton b) {
 
 	}
 

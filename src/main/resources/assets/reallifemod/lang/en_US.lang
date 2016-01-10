@@ -2,6 +2,7 @@
 item.circuitboard.name=Circuitboard
 item.scrabbedmetal.name=Scrabed Metal
 item.itemSalt.name=Salt
+item.CopperIngot.name=Copper Ingot
 
 //----------------Blocks------------
 tile.RLMTelevision.name=Television

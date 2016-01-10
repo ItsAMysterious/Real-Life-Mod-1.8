@@ -1,10 +1,13 @@
 package itsamysterious.mods.reallifemod.core.eventhandlers;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import itsamysterious.mods.reallifemod.core.RLMBlockContainer;
 import itsamysterious.mods.reallifemod.core.gui.lifesystem.GuiMarriageProposal;
+import itsamysterious.mods.reallifemod.core.lifesystem.RLMPlayerProps;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -45,6 +48,12 @@ public class ClientHandler {
 		if (KeyHandler.CharacterKey.isPressed()) {
 			System.out.println("Test");
 		}
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_P)) {
+			RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).peeing=true;
+		}else
+			RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).peeing=false;
+
 
 	}
 

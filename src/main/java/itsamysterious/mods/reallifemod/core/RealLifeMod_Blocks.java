@@ -5,7 +5,9 @@ import java.util.List;
 
 import itsamysterious.mods.reallifemod.RealLifeMod;
 import itsamysterious.mods.reallifemod.core.blocks.Block_Computer;
+import itsamysterious.mods.reallifemod.core.blocks.Block_CopperOre;
 import itsamysterious.mods.reallifemod.core.blocks.Block_Drawer;
+import itsamysterious.mods.reallifemod.core.blocks.Block_DrinksFridge;
 import itsamysterious.mods.reallifemod.core.blocks.Block_GasTank;
 import itsamysterious.mods.reallifemod.core.blocks.Block_IronFence;
 import itsamysterious.mods.reallifemod.core.blocks.Block_Parquet;
@@ -15,24 +17,21 @@ import itsamysterious.mods.reallifemod.core.blocks.Block_Ramp;
 import itsamysterious.mods.reallifemod.core.blocks.Block_Tarmac;
 import itsamysterious.mods.reallifemod.core.blocks.Block_Television;
 import itsamysterious.mods.reallifemod.core.blocks.Block_VendingMachine;
-import itsamysterious.mods.reallifemod.core.blocks.Block_DrinksFridge;
-import itsamysterious.mods.reallifemod.core.blocks.Block_CopperOre;
-import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_PictureFrame;
 import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_Cable;
-import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_Streetlight;
+import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_PictureFrame;
 import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_Pinwheel;
 import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_PowerLine;
+import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_Streetlight;
 import itsamysterious.mods.reallifemod.core.blocks.electrisity.Block_Transformer;
-import itsamysterious.mods.reallifemod.core.blocks.furniture.Block_Chair;
 import itsamysterious.mods.reallifemod.core.blocks.furniture.Block_Dartboard;
 import itsamysterious.mods.reallifemod.core.blocks.furniture.Block_Shelf;
 import itsamysterious.mods.reallifemod.core.blocks.furniture.Block_TVTable;
 import itsamysterious.mods.reallifemod.core.blocks.furniture.Block_Table;
+import itsamysterious.mods.reallifemod.core.blocks.sanitary.Block_Washingbasin;
+import itsamysterious.mods.reallifemod.core.blocks.sanitary.Block_Toilet;
 import itsamysterious.mods.reallifemod.core.blocks.sanitary.Block_Urinal;
-import itsamysterious.mods.reallifemod.core.blocks.sanitary.BlockWashingbasin;
 import itsamysterious.mods.reallifemod.init.Reference;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRailDetector;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -47,14 +46,14 @@ public class RealLifeMod_Blocks {
 	// Blockvariables
 	public static Block block_TV, block_Drawer, block_Computer, parquet, toilet, washbasin, petrolPump, tarmac, gastank,
 			lantern, vendingMachine, drinksFridge, powerLine, transformer, cable, pinwheel, copperore, pictureframe,
-			ramp, tvtable, shelf, blockironfence, railing, dartBoard, table, chair;
+			ramp, tvtable, shelf, blockironfence, railing, dartBoard, table, chair,urinal;
 
 	public static void defineBlocks() {
 		blockList.add(block_TV = new Block_Television());
 		blockList.add(block_Drawer = new Block_Drawer());
 		blockList.add(block_Computer = new Block_Computer());
-		blockList.add(toilet = new Block_Urinal().setCreativeTab(RealLifeMod.RLMFurniture));
-		blockList.add(washbasin = new BlockWashingbasin().setCreativeTab(RealLifeMod.RLMFurniture));
+		blockList.add(toilet = new Block_Toilet().setCreativeTab(RealLifeMod.RLMFurniture));
+		blockList.add(washbasin = new Block_Washingbasin().setCreativeTab(RealLifeMod.RLMFurniture));
 		blockList.add(petrolPump = new Block_PetrolPump());
 		blockList.add(parquet = new Block_Parquet().setCreativeTab(RealLifeMod.RLMDeco));
 		blockList.add(tarmac = new Block_Tarmac(Material.rock).setUnlocalizedName("blocktarmac")
@@ -74,6 +73,7 @@ public class RealLifeMod_Blocks {
 		blockList.add(blockironfence = new Block_IronFence(Material.iron));
 		blockList.add(railing = new Block_Railing());
 		blockList.add(table=new Block_Table());
+		blockList.add(urinal = new Block_Urinal().setCreativeTab(RealLifeMod.RLMFurniture));
 	//	blockList.add(chair=new BlockChair());
 
 		blocks3d.add(dartBoard = new Block_Dartboard());

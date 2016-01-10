@@ -7,9 +7,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockWashingbasin extends BlockContainer{
+public class Block_Washingbasin extends BlockContainer{
 
-	public BlockWashingbasin() {
+	public Block_Washingbasin() {
 		super(Material.rock);
 		this.setUnlocalizedName("washbasin");
 	}

@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 
 public class RLMMenu extends RLMTabbedScreen {
 
@@ -22,6 +23,9 @@ public class RLMMenu extends RLMTabbedScreen {
 		tabs.add(new CarsTab());
 		tabs.add(new MiscTab());
 		tabs.add(new OptionsTab());
+		tabs.add(new JobTab());
+
+		tabs.get(0).isSelected = true;
 	}
 
 	@Override
@@ -36,8 +40,11 @@ public class RLMMenu extends RLMTabbedScreen {
 	}
 
 	class LifeTab extends ScreenTab {
+		private Minecraft mc;
+
 		public LifeTab() {
-			super(0, "Life");
+			super(0, EnumChatFormatting.GOLD + "Life");
+			this.mc = Minecraft.getMinecraft();
 		}
 
 		public void initTab() {
@@ -49,44 +56,42 @@ public class RLMMenu extends RLMTabbedScreen {
 		public void drawTab(int mouseX, int mouseY, float partialTicks) {
 			super.drawTab(mouseX, mouseY, partialTicks);
 			if (isSelected) {
-				RLMPlayerProps props = RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer);
-				if (props != null) {
-					drawString(fontRendererObj, "Name: " + props.getName() + " " + props.getSurname(), width / 2 - 115,
-							height / 2 - 70, Color.white.getRGB());
-				} else {
-					RLMPlayerProps.register(Minecraft.getMinecraft().thePlayer);
-					RealLifeMod.network.sendToServer(new SetPropertiesPackage(
-							Minecraft.getMinecraft().thePlayer.getEntityId(), "Test", "Test", "male"));
-
-				}
-
-				GL11.glDisable(GL11.GL_LIGHTING);
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-				Minecraft.getMinecraft().entityRenderer.disableLightmap();
-				renderEntityAtPos(p, width / 2 + 75, height / 2 + 15, -90, 0, 0, 4, 4);
+				RLMPlayerProps props = RLMPlayerProps.get(p);
+				drawString(fontRendererObj, "Name: " + props.getName() + " " + props.getSurname(), width / 2 - 115,
+						height / 2 - 70, Color.white.getRGB());
+				// drawString(fontRendererObj,"Gender: " +
+				// (props.gender.toString()), width / 2 - 115,height / 2 - 60,
+				// Color.white.getRGB());
+				drawString(fontRendererObj, "Age: " + (p.getAge()), width / 2 - 115, height / 2 - 50,
+						Color.white.getRGB());
+				drawString(fontRendererObj, "Money: " + (props.cash) + "€", width / 2 - 115, height / 2 - 40,
+						Color.white.getRGB());
+				drawString(fontRendererObj, "-----------------------", width / 2 - 115, height / 2 - 30,
+						Color.white.getRGB());
+				drawString(
+						fontRendererObj, EnumChatFormatting.BLUE + "Waterlevel: " + EnumChatFormatting.WHITE
+								+ props.WaterLevel * 100 + "ml",
+						width / 2 - 115, height / 2 - 20, Color.white.getRGB());
+				drawString(fontRendererObj,
+						EnumChatFormatting.DARK_GREEN + "Mood: " + EnumChatFormatting.WHITE + props.feeling,
+						width / 2 - 115, height / 2 - 10, Color.white.getRGB());
+
 				GL11.glColor3f(1, 1, 1);
+				GL11.glTranslated(0, 0, 10);
+				RenderUtils.renderEntityAtPos(width / 2 + 75, height / 2 + 15, 0, -90 + mouseX, 0, this.mc.thePlayer);
+
 			}
+
+		}
+
+		public void actionPerformed(GuiButton b) {
+
 		}
 	}
 
 	public void renderEntityAtPos(Entity e, int x, int y, float rotationYaw, float rotationPitch, float rotationRoll,
 			float scaleX, float scaleY) {
-		Entity entity = e;
-		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glTranslatef(x, y, 5.0F);
-		GL11.glRotatef(rotationPitch, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(rotationYaw, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(rotationRoll, 0.0F, 0.0F, 1.0F);
-
-		GL11.glScalef(scaleX * 10, scaleY * 10, scaleX * 10);
-		GL11.glPushMatrix();
-		GL11.glRotatef(180, 0.0F, 0.0F, 1.0F);
-		GL11.glPushMatrix();
-		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(e, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-		GL11.glPopMatrix();
-		GL11.glPopMatrix();
-		GL11.glPopMatrix();
 
 	}
 
@@ -109,6 +114,23 @@ public class RLMMenu extends RLMTabbedScreen {
 
 		@Override
 		public void drawTab(int mouseX, int mouseY, float partialTicks) {
+			super.drawTab(mouseX, mouseY, partialTicks);
+		}
+
+	}
+
+	class JobTab extends ScreenTab {
+		public JobTab() {
+			super(4, "My Job");
+		}
+
+		@Override
+		public void drawTab(int mouseX, int mouseY, float partialTicks) {
+			if (isSelected) {
+				drawCenteredString(fontRendererObj,
+						"You are a: " + RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).profession.name(),
+						width / 2, height / 2 - 80, Color.white.getRGB());
+			}
 			super.drawTab(mouseX, mouseY, partialTicks);
 		}
 

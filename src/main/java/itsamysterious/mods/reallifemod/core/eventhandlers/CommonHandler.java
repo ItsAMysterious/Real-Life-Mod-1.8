@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -29,82 +28,36 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CommonHandler {
 	private int tickrun = 0;
-	private boolean countticks = true;
 
 	public CommonHandler() {
 		MinecraftForge.EVENT_BUS.register(this);
+		tickrun = 0;
 	}
 
 	@SubscribeEvent
 	public void updateRealLifeProps(PlayerTickEvent event) {
-		tickrun++;
-		if (RLMPlayerProps.get(event.player) != null) {
-			if (event.player.worldObj.isRemote && event.phase == event.phase.END) {
-				RLMPlayerProps.get(event.player).circleOfLife();
-				if (RLMPlayerProps.get(event.player).getName() == null) {
-					BlockPos p = event.player.getPosition();
-					event.player.openGui(RealLifeMod.instance, GuiModInit.ID, event.player.worldObj, 0, 0, 0);
-				} else {
-					if (RLMPlayerProps.get(event.player).getName().isEmpty()) {
-						BlockPos p = event.player.getPosition();
-						event.player.openGui(RealLifeMod.instance, GuiModInit.ID, event.player.worldObj, p.getX(),
-								p.getY(), p.getZ());
-					}
-				}
-			}
-		}
 	}
 
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event) {
-
-		if (event.entity instanceof EntityPlayer)
-			if (RLMPlayerProps.get((EntityPlayer) event.entity) == null) {
-				System.out.println("EntityConstructing Called!");
-				// This is how extended properties are registered using our
-				// convenient method from earlier
-				RLMPlayerProps.register((EntityPlayer) event.entity);
-				if (RLMPlayerProps.get((EntityPlayer) event.entity) != null) {
-					RLMPlayerProps p = RLMPlayerProps.get((EntityPlayer) event.entity);
-					if (p.doneTutorial == false && event.entity.worldObj.isRemote) {
-						Minecraft.getMinecraft().displayGuiScreen(new GuiModInit());
-						/*
-						 * ((EntityPlayer)
-						 * event.entity).openGui(RealLifeMod.instance,
-						 * GuiModInit.ID, event.entity.worldObj,
-						 * event.entity.posX, event.entity.posY,
-						 * event.entity.posZ);
-						 */
-					}
-				}
-			}
+		if (event.entity instanceof EntityPlayer) {
+			RLMPlayerProps.register((EntityPlayer) event.entity);
+		}
 
 	}
 
-	/*
-	 * @SubscribeEvent public void onClonePlayer(PlayerEvent.Clone event) {
-	 * NBTTagCompound compound = new NBTTagCompound();
-	 * RLMPlayerProps.get(event.original).saveNBTData(compound);
-	 * RLMPlayerProps.get(event.entityPlayer).loadNBTData(compound); }
-	 */
-
 	@SubscribeEvent
 	public void showTheGui(PlayerLoggedInEvent event) {
-		/*
-		 * if (RLMPlayerProps.get(event.player) != null) { RLMPlayerProps props
-		 * = RLMPlayerProps.get(event.player); if (props.shownGui = true) { if
-		 * (props.getName() == null || props.getSurname() == null ||
-		 * props.getGender() == null) { BlockPos p = event.player.getPosition();
-		 * event.player.openGui(RealLifeMod.instance, GuiModInit.ID,
-		 * event.player.worldObj, p.getX(), p.getY(), p.getZ()); } } }
-		 */
-
-		System.out.println("ShowGui Called!");
+		System.out.println("PlayerLoggedInEvent has been called - the RLMPlayerProps are"
+				+ (RLMPlayerProps.get(event.player) == null ? "null" : "not null"));
 	}
 
 	@SubscribeEvent
 	public void onClonePlayer(PlayerEvent.Clone event) {
-		RLMPlayerProps.get(event.entityPlayer).copy(RLMPlayerProps.get(event.original));
+		System.out.println("Cloning player");
+		EntityPlayer old = event.original;
+		EntityPlayer player = event.entityPlayer;
+		RLMPlayerProps.get(player).copy(old);
 	}
 
 	@SubscribeEvent
@@ -115,8 +68,6 @@ public class CommonHandler {
 			} else if (KeyHandler.EnterVehicleKey.isPressed()) {
 				if (getClosestEntity() != null) {
 					EntityVehicle v = getClosestEntity();
-					// RealLifeMod.network.sendToServer(new
-					// MountVehicleMessage(v.getEntityId()));
 				}
 			}
 

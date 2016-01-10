@@ -191,7 +191,6 @@ public class EntityVehicle extends Entity implements IEntityAdditionalSpawnData 
 		if (!isClient()) {
 			for (int i = 0; i < file.wheelPositions.length; i++) {
 				if (wheels[i] == null || !wheels[i].addedToChunk) {
-					//wheels[i] = new EntityWheel(worldObj, this, i);
 					worldObj.spawnEntityInWorld(wheels[i]);
 				}
 			}

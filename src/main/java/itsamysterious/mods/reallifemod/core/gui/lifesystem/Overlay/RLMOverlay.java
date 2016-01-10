@@ -1,4 +1,4 @@
-package itsamysterious.mods.reallifemod.core.gui.lifesystem;
+package itsamysterious.mods.reallifemod.core.gui.lifesystem.Overlay;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
@@ -16,14 +16,15 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import itsamysterious.mods.reallifemod.RealLifeMod;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Electric;
 import itsamysterious.mods.reallifemod.core.gui.GuiGamestart;
 import itsamysterious.mods.reallifemod.core.items.itemControlDevice;
+import itsamysterious.mods.reallifemod.core.lifesystem.LinesHelper;
 import itsamysterious.mods.reallifemod.core.lifesystem.RLMPlayerProps;
 import itsamysterious.mods.reallifemod.core.lifesystem.TemperatureHelper;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -56,22 +57,33 @@ public class RLMOverlay extends Gui {
 	protected Minecraft mc;
 	public static float voltage;
 
+	private Widget_PoopBar poopbar;
+	private Widget_Peebar peebar;
+
+	private Widget_Infobox infobox;
+
 	public RLMOverlay(Minecraft mc) {
 		this.mc = mc;
 	}
 
 	@SubscribeEvent
 	public void showOverlay(RenderGameOverlayEvent event) {
-		ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		this.infobox = new Widget_Infobox(0, 20, 32, 32);
+		this.poopbar = new Widget_PoopBar(0, 20, 32, 32);
+		this.peebar = new Widget_Peebar(34, 20, 32, 32);
+		this.infobox.text = "Hallo";
 
-		int k = scaledresolution.getScaledWidth();
-		int l = scaledresolution.getScaledHeight();
+		int k = res.getScaledWidth();
+		int l = res.getScaledHeight();
+		int WaterLevelleft = res.getScaledWidth() / 2 + 81;
+
 		if (event.type != ElementType.ALL) {
 			return;
 		}
 
 		if (Minecraft.getMinecraft().currentScreen != null) {
-			return;
+			// return;
 		}
 		glPushMatrix();
 		if (!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode
@@ -102,6 +114,44 @@ public class RLMOverlay extends Gui {
 			glColor3f(1.0F, 1.0F, 1.0F);
 			glDisable(GL_BLEND);
 			glDepthMask(true);
+			int numBottles = (int) (RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).WaterLevel);
+			int offsetBottles = Minecraft.getMinecraft().thePlayer.isInsideOfMaterial(Material.water) ? 10 : 0;
+
+			bindTexture(new ResourceLocation("reallifemod:textures/items/drop_Empty.png"));
+			for (int i = 0; i < 10; i++) {
+				drawScaledCustomSizeModalRect((int) (WaterLevelleft + i * -8), res.getScaledHeight() - 48 - offsetBottles, 0,
+						0, 8, 8, 8, 8, 8, 8);
+			}
+
+			for (int i = 0; i < 10; i++) {
+				if (i * 2 + 1 < numBottles) {
+					bindTexture(new ResourceLocation("reallifemod:textures/items/drop_Full.png"));
+					drawScaledCustomSizeModalRect((int) (WaterLevelleft + i * -8),
+							res.getScaledHeight() - 48 - offsetBottles, 0, 0, 8, 8, 8, 8, 8, 8);
+
+				} else if (i * 2 + 1 == numBottles) {
+					bindTexture(new ResourceLocation("reallifemod:textures/items/drop_Half.png"));
+					drawScaledCustomSizeModalRect((int) (WaterLevelleft + i * -8),
+							res.getScaledHeight() - 48 - offsetBottles, 0, 0, 8, 8, 8, 8, 8, 8);
+
+				}
+			}
+
+			if (RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).WaterLevel < 6
+					&& RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).WaterLevel > 3) {
+				drawCenteredString(Minecraft.getMinecraft().fontRendererObj,
+						LinesHelper.ThirstWarning.getChatComponentText_TextValue(), res.getScaledWidth() / 2, 5,
+						Color.white.getRGB());
+
+			}
+
+			if (RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).WaterLevel < 1
+					&& RLMPlayerProps.get(Minecraft.getMinecraft().thePlayer).WaterLevel > 0.1) {
+				drawCenteredString(Minecraft.getMinecraft().fontRendererObj,
+						LinesHelper.ThirstWarning2.getChatComponentText_TextValue(), res.getScaledWidth() / 2, 5,
+						Color.white.getRGB());
+			}
+
 		}
 
 		if (Minecraft.getMinecraft().objectMouseOver != null) {
@@ -134,6 +184,10 @@ public class RLMOverlay extends Gui {
 			}
 
 		}
+
+		/*
+		 * This is run when the player is driving a Car or Truck
+		 */
 		if (Minecraft.getMinecraft().thePlayer.ridingEntity instanceof EntityDriveable) {
 			EntityDriveable v = (EntityDriveable) Minecraft.getMinecraft().thePlayer.ridingEntity;
 			bindTexture(new ResourceLocation("reallifemod:textures/gui/overlay/dashboard.png"));
@@ -190,7 +244,7 @@ public class RLMOverlay extends Gui {
 					/ 2));
 
 			GL11.glPushMatrix();
-			GL11.glScaled(0.75, 0.75, 0);
+			// GL11.glScaled(0.75, 0.75, 0);
 			GL11.glColor3f(1.0f, 1.0f, 1.0f);
 			GL11.glTranslated(k * 9.5, l * 11 - 40, 0);
 			GL11.glPushMatrix();
@@ -203,7 +257,8 @@ public class RLMOverlay extends Gui {
 
 		}
 
-		if (Minecraft.getMinecraft().objectMouseOver.entityHit instanceof EntityDriveable) {
+		if (Minecraft.getMinecraft().objectMouseOver.entityHit != null
+				&& Minecraft.getMinecraft().objectMouseOver.entityHit instanceof EntityDriveable) {
 			EntityDriveable e = (EntityDriveable) Minecraft.getMinecraft().objectMouseOver.entityHit;
 			drawCenteredString(Minecraft.getMinecraft().fontRendererObj, e.getFile().vehicleName, k / 2, l / 2 + 10,
 					Color.orange.getRGB());
@@ -221,6 +276,8 @@ public class RLMOverlay extends Gui {
 			// mount!", k/2, l/2+20, Color.white.getRGB());
 		}
 
+		// infobox.drawWidget(0, 0, 0);
+
 		glPopMatrix();
 
 	}
@@ -236,30 +293,13 @@ public class RLMOverlay extends Gui {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			RLMPlayerProps props = RLMPlayerProps.get(player);
 
-			bindTexture(new ResourceLocation("reallifemod:textures/gui/overlay/poopbar_empty.png"));
-			drawModalRectWithCustomSizedTexture(0, 20, 2, 0, 32, 32, 32, 32);
-			/* Full poop bar */
-			bindTexture(new ResourceLocation("reallifemod:textures/gui/overlay/poopbar_full.png"));
-			drawModalRectWithCustomSizedTexture(0, 20, 2, 0, 32, 32, 32, 32);
-			bindTexture(new ResourceLocation("reallifemod:textures/items/bottleEmpty.png"));
-			drawModalRectWithCustomSizedTexture(25, 21, 0, 0, 32, 32, 32, 32);
-			/* Full poop bar */
-			bindTexture(new ResourceLocation("reallifemod:textures/items/bottleFilled.png"));
-			drawModalRectWithCustomSizedTexture(25, 21, 0, 0, 32, 32, 32, 32);
+			poopbar.drawWidget(0, 0, 0F);
+			peebar.drawWidget(0, 0, 0F);
 
 			bindTexture(new ResourceLocation("reallifemod:textures/gui/overlay/lucky.png"));
 			drawScaledCustomSizeModalRect(65, 1, 0, 0, 31, 31, 20, 20, 32, 32);
-			// drawModalRectWithCustomSizedTexture(55, 0, 0, 0, 32, 32, 32, 32);
 
-			/*
-			 * int value = (int) (props.getWater() * 0.49); bindTexture(new
-			 * ResourceLocation(
-			 * "reallifemod:textures/gui/overlay/waterbar_full.png"));
-			 * drawModalRectWithCustomSizedTexture(20, 5, 0, 0, value, 6, 49,
-			 * 6);
-			 */
-
-			drawString(Minecraft.getMinecraft().fontRendererObj, String.valueOf("Cash: " + props.money + "$"), 2, 2,
+			drawString(Minecraft.getMinecraft().fontRendererObj, String.valueOf("Cash: " + props.cash + "$"), 2, 2,
 					Color.white.getRGB());
 			float temperature = TemperatureHelper
 					.getTemperaturesForBiomes(player.worldObj.getBiomeGenForCoords(player.getPosition()), player);
@@ -267,6 +307,10 @@ public class RLMOverlay extends Gui {
 					TemperatureHelper.getColorForTemperature(temperature));
 
 		}
+	}
+
+	public void drawParts(ScaledResolution resolution) {
+
 	}
 
 	private void bindTexture(ResourceLocation loc) {

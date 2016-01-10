@@ -13,7 +13,7 @@ public class ItemBattery extends Item{
 	public ItemBattery() {
 		this.setMaxStackSize(1);
 		this.voltage=100;
-		setUnlocalizedName("itemBattery");
+		setUnlocalizedName("item_Battery");
 		GameRegistry.registerItem(this, getUnlocalizedName().substring(5));
 		
 	}

@@ -1,7 +1,12 @@
 package itsamysterious.mods.reallifemod.client;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import itsamysterious.mods.reallifemod.Screenshotspack;
 import itsamysterious.mods.reallifemod.common.CommonProxy;
@@ -25,10 +30,11 @@ import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TVTable;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Toilet;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Transformer;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Urinal;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_VendingMachine;
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
 import itsamysterious.mods.reallifemod.core.eventhandlers.KeyHandler;
-import itsamysterious.mods.reallifemod.core.gui.lifesystem.RLMOverlay;
+import itsamysterious.mods.reallifemod.core.gui.lifesystem.Overlay.RLMOverlay;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderPylon;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderVehicle;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderWheel;
@@ -48,6 +54,7 @@ import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.Render_DrinksF
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.Render_GasTank;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.Render_PowerLine;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.Render_VendingMachine;
+import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.renderUrinal;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.render_Computer;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.render_Drawer;
 import itsamysterious.mods.reallifemod.core.rendering.tileEntitys.render_GasPump;
@@ -68,7 +75,10 @@ import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetworkManager;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -78,6 +88,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
+import net.minecraftforge.fml.common.network.internal.NetworkModHolder.NetworkChecker;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ClientProxy extends CommonProxy {
 
@@ -86,6 +99,7 @@ public class ClientProxy extends CommonProxy {
 
 	public ClientProxy() {
 		loadCoreModules();
+		registerCraftingRecipes();
 	}
 
 	@Override
@@ -111,6 +125,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Railing.class, new RenderRailing());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_DartBoard.class, new RenderDartboard());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Table.class, new RenderTable());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Toilet.class, new render_Toilet());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Urinal.class, new renderUrinal());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityDriveable.class, new RenderVehicle());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPylon.class, new RenderPylon());
@@ -140,6 +156,27 @@ public class ClientProxy extends CommonProxy {
 		}
 		defaultResourcePacks.add(new Screenshotspack());
 		Minecraft.getMinecraft().refreshResources();
+
+		File RLMDirectory = new File(Minecraft.getMinecraft().mcDataDir, "RLM/texts");
+		if (RLMDirectory.exists()) {
+			File jobfile = new File(RLMDirectory, "Jobs.txt");
+			File newjobfile = null;
+			try {
+				FileUtils.copyURLToFile(new URL("http://themoddingparadise.de/RealLifeMod/Jobs.txt"), jobfile);
+				jobfile.setLastModified(System.currentTimeMillis());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (jobfile.exists()) {
+				System.out.println("Succesfully downloaded Resources");
+			}
+		} else
+
+		{
+			RLMDirectory.mkdirs();
+		}
+
 	}
 
 	/**
@@ -181,10 +218,17 @@ public class ClientProxy extends CommonProxy {
 		if (e.target.entityHit instanceof EntityPlayer) {
 		}
 	}
-	
+
 	@Override
 	public boolean isThePlayer(EntityPlayer player) {
 		return player == FMLClientHandler.instance().getClient().thePlayer;
+	}
+
+	public void registerCraftingRecipes() {
+		GameRegistry.addShapedRecipe(new ItemStack(RealLifeMod_Items.bottle, 16), "#W#", "G#G", "GGG", 'G',
+				Blocks.glass_pane, 'W', Blocks.wooden_button);
+		GameRegistry.addShapedRecipe(new ItemStack(RealLifeMod_Items.bottle, 16), "#W#", "G#G", "GGG", 'G',
+				Blocks.glass_pane, 'W', Blocks.stone_button);
 
 	}
 

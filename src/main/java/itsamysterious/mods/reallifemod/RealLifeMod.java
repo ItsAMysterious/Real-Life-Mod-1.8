@@ -26,8 +26,10 @@ import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_TVTable;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Table;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Toilet;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Transformer;
+import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Urinal;
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_VendingMachine;
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
+import itsamysterious.mods.reallifemod.core.entities.EntitySit;
 import itsamysterious.mods.reallifemod.core.eventhandlers.ClientHandler;
 import itsamysterious.mods.reallifemod.core.eventhandlers.CommonHandler;
 import itsamysterious.mods.reallifemod.core.eventhandlers.GuiHandler;
@@ -39,6 +41,8 @@ import itsamysterious.mods.reallifemod.core.packets.ControlableInputPacket;
 import itsamysterious.mods.reallifemod.core.packets.ControllableInputHandler;
 import itsamysterious.mods.reallifemod.core.packets.CustomCollisionHandler;
 import itsamysterious.mods.reallifemod.core.packets.CustomCollisionPacket;
+import itsamysterious.mods.reallifemod.core.packets.DefecatePacket;
+import itsamysterious.mods.reallifemod.core.packets.DefecationHandler;
 import itsamysterious.mods.reallifemod.core.packets.KeyHeldHandler;
 import itsamysterious.mods.reallifemod.core.packets.MountHandler;
 import itsamysterious.mods.reallifemod.core.packets.MountVehicleMessage;
@@ -52,6 +56,8 @@ import itsamysterious.mods.reallifemod.core.packets.SetPropertiesHandler;
 import itsamysterious.mods.reallifemod.core.packets.SetPropertiesPackage;
 import itsamysterious.mods.reallifemod.core.packets.UpdateControlHandler;
 import itsamysterious.mods.reallifemod.core.packets.UpdateControlPackage;
+import itsamysterious.mods.reallifemod.core.packets.UpdateToiletHandler;
+import itsamysterious.mods.reallifemod.core.packets.UpdateToiletPacket;
 import itsamysterious.mods.reallifemod.core.packets.UpdateVehiclePacket;
 import itsamysterious.mods.reallifemod.core.roads.signs.Signs;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasPump;
@@ -143,12 +149,12 @@ public class RealLifeMod {
 		MinecraftForge.EVENT_BUS.register(proxy);
 		FMLCommonHandler.instance().bus().register(instance);
 		FMLCommonHandler.instance().bus().register(new ClientProxy());
-		
+
 		NetworkRegistry.INSTANCE.registerGuiHandler(RealLifeMod.instance, new GuiHandler());
-		
+
 		FMLCommonHandler.instance().bus().register(new CommonHandler());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
-		
+
 		RealLifeMod_Blocks.defineBlocks();
 		RealLifeMod_Items.defineItems();
 
@@ -174,6 +180,8 @@ public class RealLifeMod {
 		network.registerMessage(ControllableInputHandler.class, ControlableInputPacket.class, 6, Side.SERVER);
 		network.registerMessage(KeyHeldHandler.class, PacketDriveableKeyHeld.class, 7, Side.SERVER);
 		network.registerMessage(PlaySoundHandler.class, PacketPlaySound.class, 8, Side.CLIENT);
+		network.registerMessage(DefecationHandler.class, DefecatePacket.class, 9, Side.SERVER);
+		network.registerMessage(UpdateToiletHandler.class, UpdateToiletPacket.class, 10, Side.SERVER);
 
 		setupTileEntities();
 		GameRegistry.registerWorldGenerator(new WorldGenCopper(), 8);
@@ -229,6 +237,8 @@ public class RealLifeMod {
 				true);
 		EntityRegistry.registerModEntity(EntitySeat.class, "EntitySeat", ModEntityID++, RealLifeMod.instance, 80, 1,
 				true);
+		EntityRegistry.registerModEntity(EntitySit.class, "EntitySit", ModEntityID++, RealLifeMod.instance, 80, 1,
+				false);
 
 	}
 
@@ -284,6 +294,8 @@ public class RealLifeMod {
 		setupTile(TileEntity_Table.class);
 		setupTile(TileEntity_DartBoard.class);
 		setupTile(TileEntity_Chair.class);
+		setupTile(TileEntity_Urinal.class);
+
 	}
 
 	public void setupTile(Class<? extends TileEntity> class1) {

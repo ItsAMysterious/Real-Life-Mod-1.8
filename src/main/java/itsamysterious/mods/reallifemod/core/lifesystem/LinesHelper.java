@@ -5,7 +5,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class LinesHelper {
 	
-	public static final ChatComponentText ThirstWarning=new ChatComponentText("You better get some water!!");
+	public static final ChatComponentText ThirstWarning=new ChatComponentText("You better get some "+EnumChatFormatting.AQUA+"water!!");
 	public static final ChatComponentText ThirstWarning2=new ChatComponentText(EnumChatFormatting.RED+"DRINK SOMETHING!"+EnumChatFormatting.RESET+" Otherwhise you will die!");
 	public static final ChatComponentText DyingOfThirst=new ChatComponentText("You're dying of" + EnumChatFormatting.BOLD+EnumChatFormatting.RED + "thirst"			+ EnumChatFormatting.WHITE + "!");
 

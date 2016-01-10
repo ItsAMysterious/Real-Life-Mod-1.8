@@ -1,7 +1,7 @@
 package itsamysterious.mods.reallifemod.core.packets;
 
 import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_Electric;
-import itsamysterious.mods.reallifemod.core.gui.lifesystem.RLMOverlay;
+import itsamysterious.mods.reallifemod.core.gui.lifesystem.Overlay.RLMOverlay;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityDriveable;
 import itsamysterious.mods.reallifemod.core.vehicles.EntityVehicle;
 import net.minecraft.client.Minecraft;
