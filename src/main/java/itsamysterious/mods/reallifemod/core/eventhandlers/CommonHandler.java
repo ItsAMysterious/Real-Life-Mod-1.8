@@ -36,6 +36,11 @@ public class CommonHandler {
 
 	@SubscribeEvent
 	public void updateRealLifeProps(PlayerTickEvent event) {
+		RLMPlayerProps.get(event.player).circleOfLife();
+		
+		if (RLMPlayerProps.get(event.player).gender==null) {
+			event.player.openGui(RealLifeMod.instance, GuiModInit.ID, event.player.worldObj, 0, 0, 0);
+		}
 	}
 
 	@SubscribeEvent

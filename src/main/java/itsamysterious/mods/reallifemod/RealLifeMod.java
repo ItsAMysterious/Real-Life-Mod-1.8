@@ -2,6 +2,7 @@ package itsamysterious.mods.reallifemod;
 
 import java.io.File;
 
+import api.player.render.RenderPlayerAPI;
 import itsamysterious.mods.reallifemod.client.ClientProxy;
 import itsamysterious.mods.reallifemod.common.CommonProxy;
 import itsamysterious.mods.reallifemod.common.ServerTickHandler;
@@ -59,6 +60,7 @@ import itsamysterious.mods.reallifemod.core.packets.UpdateControlPackage;
 import itsamysterious.mods.reallifemod.core.packets.UpdateToiletHandler;
 import itsamysterious.mods.reallifemod.core.packets.UpdateToiletPacket;
 import itsamysterious.mods.reallifemod.core.packets.UpdateVehiclePacket;
+import itsamysterious.mods.reallifemod.core.rendering.Entities.CustomPlayerRenderer;
 import itsamysterious.mods.reallifemod.core.roads.signs.Signs;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasPump;
 import itsamysterious.mods.reallifemod.core.tiles.TileEntity_GasTank;
@@ -146,14 +148,14 @@ public class RealLifeMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(proxy);
 		FMLCommonHandler.instance().bus().register(instance);
 		FMLCommonHandler.instance().bus().register(new ClientProxy());
-
-		NetworkRegistry.INSTANCE.registerGuiHandler(RealLifeMod.instance, new GuiHandler());
-
-		FMLCommonHandler.instance().bus().register(new CommonHandler());
+		MinecraftForge.EVENT_BUS.register(proxy);
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(RealLifeMod.instance, new GuiHandler());
+		FMLCommonHandler.instance().bus().register(new CommonHandler());
+		
+		RenderPlayerAPI.register(Reference.ID, CustomPlayerRenderer.class);
 
 		RealLifeMod_Blocks.defineBlocks();
 		RealLifeMod_Items.defineItems();

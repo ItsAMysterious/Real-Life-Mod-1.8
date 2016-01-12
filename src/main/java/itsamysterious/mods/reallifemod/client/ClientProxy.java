@@ -1,8 +1,6 @@
 package itsamysterious.mods.reallifemod.client;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -35,6 +33,7 @@ import itsamysterious.mods.reallifemod.core.blocks.tiles.TileEntity_VendingMachi
 import itsamysterious.mods.reallifemod.core.entities.EntityPylon;
 import itsamysterious.mods.reallifemod.core.eventhandlers.KeyHandler;
 import itsamysterious.mods.reallifemod.core.gui.lifesystem.Overlay.RLMOverlay;
+import itsamysterious.mods.reallifemod.core.rendering.Entities.CustomPlayerRenderer;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderPylon;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderVehicle;
 import itsamysterious.mods.reallifemod.core.rendering.Entities.RenderWheel;
@@ -69,18 +68,23 @@ import itsamysterious.mods.reallifemod.init.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetworkManager;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -88,8 +92,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
-import net.minecraftforge.fml.common.network.internal.NetworkModHolder.NetworkChecker;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ClientProxy extends CommonProxy {
@@ -127,7 +129,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Table.class, new RenderTable());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Toilet.class, new render_Toilet());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntity_Urinal.class, new renderUrinal());
-
+	
 		RenderingRegistry.registerEntityRenderingHandler(EntityDriveable.class, new RenderVehicle());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPylon.class, new RenderPylon());
 		RenderingRegistry.registerEntityRenderingHandler(EntityWheel.class, new RenderWheel());

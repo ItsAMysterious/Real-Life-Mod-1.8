@@ -92,11 +92,7 @@ public class RLMPlayerProps implements IExtendedEntityProperties, IUpdatePlayerL
 
 	@Override
 	public void update() {
-		this.circleOfLife();
-		
-		if (gender==null&&loadedtag ==true) {
-			player.openGui(RealLifeMod.instance, GuiModInit.ID, player.worldObj, 0, 0, 0);
-		}
+
 	}
 	
 	public void circleOfLife() {

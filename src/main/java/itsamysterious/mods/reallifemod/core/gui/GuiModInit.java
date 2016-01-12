@@ -192,18 +192,24 @@ public class GuiModInit extends GuiScreen {
 
 		try {
 			textfile = new FileInputStream(new File(Minecraft.getMinecraft().mcDataDir, "RLM/texts/Jobs.txt"));
-			if(textfile!=null){
-			@SuppressWarnings("resource")
-			BufferedReader reader = new BufferedReader(new InputStreamReader(textfile));
-			Stream<String> lines = reader.lines();
-			for (Object line : lines.toArray()) {
-				if (line.toString().contains(text) && line.toString().contains(":")) {
-					CopyToTextField = true;
+			if (textfile != null) {
+				@SuppressWarnings("resource")
+				BufferedReader reader = new BufferedReader(new InputStreamReader(textfile));
+				Stream<String> lines = reader.lines();
+				for (Object line : lines.toArray()) {
+					if (line.toString().contains("/n")) {
+						CopyToTextField = false;
+					}
+					if (line.toString().contains(text) && line.toString().contains(":")) {
+						CopyToTextField = true;
+					}
+
+		
+
+					if (CopyToTextField==true) {
+						sb.append(" " + line);
+					}
 				}
-				if (CopyToTextField) {
-					sb.append(" " + line);
-				}
-			}
 			}
 			description = String.valueOf(sb);
 		} catch (IOException e) {
